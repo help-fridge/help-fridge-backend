@@ -1,0 +1,107 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model CategoryTb {
+  code               Int          @id
+  name               String       @unique @db.VarChar
+  parentCategoryCode Int?         @map("parent_category_code")
+  categoryTb         CategoryTb?  @relation("category_tbTocategory_tb", fields: [parentCategoryCode], references: [code], onDelete: NoAction, onUpdate: NoAction, map: "fk_category_tb_to_category_tb")
+  otherCategoryTb    CategoryTb[] @relation("category_tbTocategory_tb")
+  foodTb             FoodTb[]
+
+  @@map("category_tb")
+}
+
+model FoodHistoryTb {
+  idx       Int      @id @default(autoincrement())
+  foodIdx   Int      @map("food_idx")
+  userIdx   Int      @map("user_idx")
+  reasonIdx Int      @map("reason_idx")
+  amount    Decimal  @db.Decimal
+  addedAt   DateTime @map("added_at") @db.Timestamptz(6)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  foodTb    FoodTb   @relation(fields: [foodIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_food_tb_to_food_history_tb")
+  reasonTb  ReasonTb @relation(fields: [reasonIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_reason_tb_to_food_history_tb")
+  userTb    UserTb   @relation(fields: [userIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_tb_to_food_history_tb")
+
+  @@map("food_history_tb")
+}
+
+model FoodTb {
+  idx                Int                  @id @default(autoincrement())
+  categoryCode       Int                  @map("category_code")
+  unitIdx            Int                  @map("unit_idx")
+  name               String               @unique @db.VarChar
+  foodHistoryTb      FoodHistoryTb[]
+  categoryTb         CategoryTb           @relation(fields: [categoryCode], references: [code], onDelete: NoAction, onUpdate: NoAction, map: "fk_category_tb_to_food_tb")
+  unitTb             UnitTb               @relation(fields: [unitIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_unit_tb_to_food_tb")
+  recipeIngredientTb RecipeIngredientTb[]
+  refrigeratorTb     RefrigeratorTb[]
+
+  @@map("food_tb")
+}
+
+model ReasonTb {
+  idx           Int             @id @default(autoincrement())
+  name          String          @unique @db.VarChar
+  foodHistoryTb FoodHistoryTb[]
+
+  @@map("reason_tb")
+}
+
+model RecipeIngredientTb {
+  foodIdx   Int      @map("food_idx")
+  recipeIdx Int      @map("recipe_idx")
+  amount    Decimal  @db.Decimal
+  foodTb    FoodTb   @relation(fields: [foodIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_food_tb_to_recipe_ingredient_tb")
+  recipeTb  RecipeTb @relation(fields: [recipeIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_recipe_tb_to_recipe_ingredient_tb")
+
+  @@id([foodIdx, recipeIdx])
+  @@map("recipe_ingredient_tb")
+}
+
+model RecipeTb {
+  idx                Int                  @id @default(autoincrement())
+  name               String               @unique @db.VarChar
+  recipeIngredientTb RecipeIngredientTb[]
+
+  @@map("recipe_tb")
+}
+
+model RefrigeratorTb {
+  idx       Int      @id @default(autoincrement())
+  foodIdx   Int      @map("food_idx")
+  userIdx   Int      @map("user_idx")
+  amount    Decimal  @db.Decimal
+  addedAt   DateTime @default(now()) @map("added_at") @db.Timestamptz(6)
+  expiredAt DateTime @map("expired_at") @db.Timestamptz(6)
+  foodTb    FoodTb   @relation(fields: [foodIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_food_tb_to_refrigerator_tb")
+  userTb    UserTb   @relation(fields: [userIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_tb_to_refrigerator_tb")
+
+  @@map("refrigerator_tb")
+}
+
+model UnitTb {
+  idx    Int      @id @default(autoincrement())
+  name   String   @unique @db.VarChar
+  foodTb FoodTb[]
+
+  @@map("unit_tb")
+}
+
+model UserTb {
+  idx            Int              @id @default(autoincrement())
+  id             String           @unique @db.VarChar
+  pw             String           @db.VarChar
+  name           String           @db.VarChar
+  foodHistoryTb  FoodHistoryTb[]
+  refrigeratorTb RefrigeratorTb[]
+
+  @@map("user_tb")
+}
