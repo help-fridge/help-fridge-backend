@@ -96,12 +96,12 @@ model UnitTb {
 }
 
 model UserTb {
-  idx            Int              @id @default(autoincrement())
-  id             String           @unique @db.VarChar
-  pw             String           @db.VarChar
-  name           String           @db.VarChar
-  foodHistoryTb  FoodHistoryTb[]
-  refrigeratorTb RefrigeratorTb[]
+  idx                Int              @id @default(autoincrement())
+  id                 String           @unique @db.VarChar
+  pw                 String           @db.VarChar
+  nickname           String           @db.VarChar
+  foodHistoryTb      FoodHistoryTb[]
+  refrigeratorTb     RefrigeratorTb[]
 
   @@map("user_tb")
 }

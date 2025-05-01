@@ -78,7 +78,7 @@ CREATE TABLE user_tb
   idx  int     NOT NULL GENERATED ALWAYS AS IDENTITY,
   id   varchar NOT NULL UNIQUE,
   pw   varchar NOT NULL,
-  name varchar NOT NULL,
+  nickname varchar NOT NULL,
   PRIMARY KEY (idx)
 );
 
