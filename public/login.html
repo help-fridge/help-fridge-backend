@@ -1,0 +1,57 @@
+<!-- 🔐 login.html -->
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>로그인</title>
+  </head>
+  <body>
+    <h2>🔐 로그인</h2>
+
+    <form id="login-form">
+      <label for="id">ID:</label>
+      <input type="text" id="id" name="id" required />
+      <br /><br />
+
+      <label for="pw">Password:</label>
+      <input type="password" id="pw" name="pw" required />
+      <br /><br />
+
+      <button type="submit">로그인</button>
+    </form>
+
+    <p id="result"></p>
+
+    <script>
+      const form = document.getElementById('login-form');
+      const result = document.getElementById('result');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const id = document.getElementById('id').value;
+        const pw = document.getElementById('pw').value;
+
+        try {
+          const response = await fetch('http://localhost:3000/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include', // ✅ 쿠키 저장 필수
+            body: JSON.stringify({ id, pw }),
+          });
+
+          if (response.redirected) {
+            window.location.href = response.url; // 자동 리디렉션
+          } else if (response.status === 401 || response.status === 400) {
+            const text = await response.text();
+            result.textContent = '❌ 로그인 실패: ' + text;
+          } else {
+            result.textContent = '❌ 예상치 못한 응답: ' + response.status;
+          }
+        } catch (err) {
+          result.textContent = '❌ 요청 실패: ' + err.message;
+        }
+      });
+    </script>
+  </body>
+</html>
