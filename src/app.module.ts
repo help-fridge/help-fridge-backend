@@ -7,6 +7,7 @@ import { UserModule } from './api/user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './common/module/prisma.module';
 import { ConfigModule } from '@nestjs/config';
+import { FridgeModule } from './api/fridge/fridge.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ConfigModule } from '@nestjs/config';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    FridgeModule,
   ],
   controllers: [AppController, UserController],
   providers: [AppService, UserService],

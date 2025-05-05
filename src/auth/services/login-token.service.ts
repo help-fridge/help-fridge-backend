@@ -58,7 +58,7 @@ export class LoginTokenService {
    */
   async signAccessToken(payload: AccessTokenPayload): Promise<string> {
     const token = await this.jwtService.signAsync(payload, {
-      expiresIn: '5s',
+      expiresIn: '10m',
     });
     if (!token) {
       throw new Error('not implement');

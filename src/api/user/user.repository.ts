@@ -4,7 +4,7 @@ import { PrismaService } from 'src/common/module/prisma.service';
 
 @Injectable()
 export class UserRepository {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async selectUserById(id: string): Promise<UserQueryResult | null> {
     const [user] = await this.prisma.$queryRaw<UserQueryResult[]>`
