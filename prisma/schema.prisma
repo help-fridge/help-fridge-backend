@@ -42,7 +42,7 @@ model FoodTb {
   categoryTb         CategoryTb           @relation(fields: [categoryCode], references: [code], onDelete: NoAction, onUpdate: NoAction, map: "fk_category_tb_to_food_tb")
   unitTb             UnitTb               @relation(fields: [unitIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_unit_tb_to_food_tb")
   recipeIngredientTb RecipeIngredientTb[]
-  refrigeratorTb     RefrigeratorTb[]
+  fridgeTb           FridgeTb[]
 
   @@map("food_tb")
 }
@@ -74,17 +74,17 @@ model RecipeTb {
   @@map("recipe_tb")
 }
 
-model RefrigeratorTb {
+model FridgeTb {
   idx       Int      @id @default(autoincrement())
   foodIdx   Int      @map("food_idx")
   userIdx   Int      @map("user_idx")
   amount    Decimal  @db.Decimal
   addedAt   DateTime @default(now()) @map("added_at") @db.Timestamptz(6)
   expiredAt DateTime @map("expired_at") @db.Timestamptz(6)
-  foodTb    FoodTb   @relation(fields: [foodIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_food_tb_to_refrigerator_tb")
-  userTb    UserTb   @relation(fields: [userIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_tb_to_refrigerator_tb")
+  foodTb    FoodTb   @relation(fields: [foodIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_food_tb_to_fridge_tb")
+  userTb    UserTb   @relation(fields: [userIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_tb_to_fridge_tb")
 
-  @@map("refrigerator_tb")
+  @@map("fridge_tb")
 }
 
 model UnitTb {
@@ -96,12 +96,12 @@ model UnitTb {
 }
 
 model UserTb {
-  idx                Int              @id @default(autoincrement())
-  id                 String           @unique @db.VarChar
-  pw                 String           @db.VarChar
-  nickname           String           @db.VarChar
-  foodHistoryTb      FoodHistoryTb[]
-  refrigeratorTb     RefrigeratorTb[]
+  idx           Int              @id @default(autoincrement())
+  id            String           @unique @db.VarChar
+  pw            String           @db.VarChar
+  nickname      String           @db.VarChar
+  foodHistoryTb FoodHistoryTb[]
+  fridgeTb      FridgeTb[]
 
   @@map("user_tb")
 }

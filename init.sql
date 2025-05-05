@@ -55,7 +55,7 @@ CREATE TABLE recipe_tb
   PRIMARY KEY (idx)
 );
 
-CREATE TABLE refrigerator_tb
+CREATE TABLE fridge_tb
 (
   idx        int                      NOT NULL GENERATED ALWAYS AS IDENTITY,
   food_idx   int                      NOT NULL,
@@ -82,13 +82,13 @@ CREATE TABLE user_tb
   PRIMARY KEY (idx)
 );
 
-ALTER TABLE refrigerator_tb
-  ADD CONSTRAINT FK_user_tb_TO_refrigerator_tb
+ALTER TABLE fridge_tb
+  ADD CONSTRAINT FK_user_tb_TO_fridge_tb
     FOREIGN KEY (user_idx)
     REFERENCES user_tb (idx);
 
-ALTER TABLE refrigerator_tb
-  ADD CONSTRAINT FK_food_tb_TO_refrigerator_tb
+ALTER TABLE fridge_tb
+  ADD CONSTRAINT FK_food_tb_TO_fridge_tb
     FOREIGN KEY (food_idx)
     REFERENCES food_tb (idx);
 
