@@ -8,6 +8,10 @@ import { FridgeSort } from '../../enums/fridge-sort.enum';
 @Injectable()
 export class ValidateFridgeSortPipe implements PipeTransform {
   transform(value: string): string {
+    if (!value) {
+      return 'fd.name ASC';
+    }
+
     const sort = Object.values(FridgeSort).find(
       (p) => p.toLowerCase() === value.toLowerCase(),
     );
@@ -17,7 +21,7 @@ export class ValidateFridgeSortPipe implements PipeTransform {
     } else if (sort === FridgeSort.EXPIREIN) {
       return `"expireIn" ASC`;
     } else if (sort === FridgeSort.ADDED_ASC) {
-      return 'fd.added_at ASC';
+      return 'fr.added_at ASC';
     }
 
     return 'fd.name ASC';
