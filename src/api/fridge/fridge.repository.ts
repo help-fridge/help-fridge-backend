@@ -5,24 +5,28 @@ import { PrismaService } from 'src/common/module/prisma.service';
 export class FridgeRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async selectAllFridgeByUserIdx(userIdx: number) {
-    const fridge = await this.prisma.$queryRaw<FridgeEntity[]>`
+  async selectAllFridgeByUserIdx(
+    userIdx: number,
+    sort: string,
+  ): Promise<FridgeEntity[]> {
+    const query = `
       SELECT
-        r.idx As idx,
-        r.amount As amount,
-        r.added_at As "addedAt",
-        DATE_PART('day', r.expired_at - NOW()) + 1 AS "expireIn",
-        f.name AS "foodName",
+        fr.idx AS idx,
+        fr.amount AS amount,
+        fr.added_at AS "addedAt",
+        DATE_PART('day', fr.expired_at - NOW()) + 1 AS "expireIn",
+        fd.name AS "foodName",
         u.name AS "unitName",
         c.name AS "categoryName",
         c.code AS "categoryCode"
-      FROM refrigerator_tb r
-      JOIN food_tb f ON r.food_idx = f.idx
-      JOIN unit_tb u ON f.unit_idx = u.idx
-      JOIN category_tb c ON f.category_code = c.code
-      WHERE r.user_idx = ${userIdx};
+      FROM fridge_tb fr
+      JOIN food_tb fd ON fr.food_idx = fd.idx
+      JOIN unit_tb u ON fd.unit_idx = u.idx
+      JOIN category_tb c ON fd.category_code = c.code
+      WHERE fr.user_idx = $1
+      ORDER BY ${sort}
     `;
 
-    return fridge ?? null;
+    return await this.prisma.$queryRawUnsafe(query, userIdx);
   }
 }
