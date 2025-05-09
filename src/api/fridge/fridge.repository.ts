@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/common/module/prisma.service';
+import { CreateFridgeInput } from './input/create-fridge.input';
 
 @Injectable()
 export class FridgeRepository {
@@ -20,7 +21,7 @@ export class FridgeRepository {
         c.name AS "categoryName",
         c.code AS "categoryCode"
       FROM fridge_tb fr
-      JOIN food_tb fd ON fr.food_idx = fd.idx
+      JOIN food_tb fd ON fr.food_id = fd.id
       JOIN unit_tb u ON fd.unit_idx = u.idx
       JOIN category_tb c ON fd.category_code = c.code
       WHERE fr.user_idx = $1
@@ -28,5 +29,41 @@ export class FridgeRepository {
     `;
 
     return await this.prisma.$queryRawUnsafe(query, userIdx);
+  }
+
+  async selectStorageIdxByStorageName(name: string): Promise<number | null> {
+    const [storageIdx] = await this.prisma.$queryRaw<{ idx: number }[]>`
+      SELECT idx
+      FROM storage_tb
+      WHERE name = ${name}
+    `;
+
+    return storageIdx.idx ?? null;
+  }
+
+  async selectCategoryByFoodId(foodId: string): Promise<number | null> {
+    const [result] = await this.prisma.$queryRaw<{ expiration: number }[]>`
+      SELECT c.expiration
+      FROM food_tb f
+      JOIN category_tb c ON f.category_code = c.code
+      WHERE f.id = ${foodId}
+    `;
+
+    return result.expiration ?? null;
+  }
+
+  async insertFridge(createFridgeInput: CreateFridgeInput, storageIdx: number) {
+    return await this.prisma.$queryRaw`
+    INSERT INTO fridge_tb (
+      food_id,
+      user_idx,
+      storage_idx,
+      amount,
+      added_at,
+      expired_at
+    ) VALUES (
+      ${createFridgeInput.foodId}, ${createFridgeInput.userIdx}, ${storageIdx}, ${createFridgeInput.amount}, ${createFridgeInput.addedAt}, ${createFridgeInput.expiredAt}
+    )
+  `;
   }
 }
