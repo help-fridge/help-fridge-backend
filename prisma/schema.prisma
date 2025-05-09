@@ -8,25 +8,23 @@ datasource db {
 }
 
 model CategoryTb {
-  code               Int          @id
-  name               String       @unique @db.VarChar
-  parentCategoryCode Int?         @map("parent_category_code")
-  categoryTb         CategoryTb?  @relation("category_tbTocategory_tb", fields: [parentCategoryCode], references: [code], onDelete: NoAction, onUpdate: NoAction, map: "fk_category_tb_to_category_tb")
-  otherCategoryTb    CategoryTb[] @relation("category_tbTocategory_tb")
-  foodTb             FoodTb[]
+  code       String   @id @db.Char(4)
+  name       String   @db.VarChar(50)
+  expiration Int
+  foodTb     FoodTb[]
 
   @@map("category_tb")
 }
 
 model FoodHistoryTb {
   idx       Int      @id @default(autoincrement())
-  foodIdx   Int      @map("food_idx")
+  food_id   String   @db.VarChar(7)
   userIdx   Int      @map("user_idx")
   reasonIdx Int      @map("reason_idx")
-  amount    Decimal  @db.Decimal
+  amount    Int
   addedAt   DateTime @map("added_at") @db.Timestamptz(6)
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
-  foodTb    FoodTb   @relation(fields: [foodIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_food_tb_to_food_history_tb")
+  food_tb   FoodTb   @relation(fields: [food_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_food_tb_to_food_history_tb")
   reasonTb  ReasonTb @relation(fields: [reasonIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_reason_tb_to_food_history_tb")
   userTb    UserTb   @relation(fields: [userIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_tb_to_food_history_tb")
 
@@ -34,74 +32,83 @@ model FoodHistoryTb {
 }
 
 model FoodTb {
-  idx                Int                  @id @default(autoincrement())
-  categoryCode       Int                  @map("category_code")
-  unitIdx            Int                  @map("unit_idx")
-  name               String               @unique @db.VarChar
-  foodHistoryTb      FoodHistoryTb[]
-  categoryTb         CategoryTb           @relation(fields: [categoryCode], references: [code], onDelete: NoAction, onUpdate: NoAction, map: "fk_category_tb_to_food_tb")
-  unitTb             UnitTb               @relation(fields: [unitIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_unit_tb_to_food_tb")
-  recipeIngredientTb RecipeIngredientTb[]
-  fridgeTb           FridgeTb[]
+  id              String           @id @db.VarChar(7)
+  name            String           @db.VarChar(50)
+  categoryCode    String           @map("category_code") @db.Char(4)
+  unitIdx         Int              @map("unit_idx")
+  food_history_tb FoodHistoryTb[]
+  categoryTb      CategoryTb       @relation(fields: [categoryCode], references: [code], onDelete: NoAction, onUpdate: NoAction, map: "fk_category_tb_to_food_tb")
+  unitTb          UnitTb           @relation(fields: [unitIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_unit_tb_to_food_tb")
+  fridge_tb       FridgeTb[]
+  recipe_food_tb  recipe_food_tb[]
 
   @@map("food_tb")
 }
 
 model ReasonTb {
   idx           Int             @id @default(autoincrement())
-  name          String          @unique @db.VarChar
+  name          String          @unique @db.VarChar(10)
   foodHistoryTb FoodHistoryTb[]
 
   @@map("reason_tb")
 }
 
-model RecipeIngredientTb {
-  foodIdx   Int      @map("food_idx")
-  recipeIdx Int      @map("recipe_idx")
-  amount    Decimal  @db.Decimal
-  foodTb    FoodTb   @relation(fields: [foodIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_food_tb_to_recipe_ingredient_tb")
-  recipeTb  RecipeTb @relation(fields: [recipeIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_recipe_tb_to_recipe_ingredient_tb")
-
-  @@id([foodIdx, recipeIdx])
-  @@map("recipe_ingredient_tb")
-}
-
 model RecipeTb {
-  idx                Int                  @id @default(autoincrement())
-  name               String               @unique @db.VarChar
-  recipeIngredientTb RecipeIngredientTb[]
+  id             Int              @id
+  name           String           @db.VarChar(50)
+  amount         String?          @db.VarChar(50)
+  time           String?          @db.VarChar(30)
+  recipe_food_tb recipe_food_tb[]
 
   @@map("recipe_tb")
 }
 
 model FridgeTb {
-  idx       Int      @id @default(autoincrement())
-  foodIdx   Int      @map("food_idx")
-  userIdx   Int      @map("user_idx")
-  amount    Decimal  @db.Decimal
-  addedAt   DateTime @default(now()) @map("added_at") @db.Timestamptz(6)
-  expiredAt DateTime @map("expired_at") @db.Timestamptz(6)
-  foodTb    FoodTb   @relation(fields: [foodIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_food_tb_to_fridge_tb")
-  userTb    UserTb   @relation(fields: [userIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_tb_to_fridge_tb")
+  idx         Int        @id @default(autoincrement())
+  food_id     String     @db.VarChar(7)
+  userIdx     Int        @map("user_idx")
+  storage_idx Int
+  amount      Int
+  addedAt     DateTime   @default(now()) @map("added_at") @db.Timestamptz(6)
+  expiredAt   DateTime   @map("expired_at") @db.Timestamptz(6)
+  updated_at  DateTime   @default(now()) @db.Timestamptz(6)
+  food_tb     FoodTb     @relation(fields: [food_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_food_tb_to_fridge_tb")
+  storage_tb  storage_tb @relation(fields: [storage_idx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_storage_tb_to_fridge_tb")
+  userTb      UserTb     @relation(fields: [userIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_tb_to_fridge_tb")
 
   @@map("fridge_tb")
 }
 
 model UnitTb {
   idx    Int      @id @default(autoincrement())
-  name   String   @unique @db.VarChar
+  name   String   @unique @db.Char(3)
   foodTb FoodTb[]
 
   @@map("unit_tb")
 }
 
 model UserTb {
-  idx           Int              @id @default(autoincrement())
-  id            String           @unique @db.VarChar
-  pw            String           @db.VarChar
-  nickname      String           @db.VarChar
+  idx           Int             @id @default(autoincrement())
+  id            String          @unique @db.VarChar(20)
+  pw            String          @db.VarChar(100)
+  nickname      String          @db.VarChar(6)
   foodHistoryTb FoodHistoryTb[]
   fridgeTb      FridgeTb[]
 
   @@map("user_tb")
+}
+
+model recipe_food_tb {
+  recipe_id Int
+  food_id   String   @db.VarChar(7)
+  food_tb   FoodTb   @relation(fields: [food_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_food_tb_to_recipe_food_tb")
+  recipe_tb RecipeTb @relation(fields: [recipe_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_recipe_tb_to_recipe_food_tb")
+
+  @@id([recipe_id, food_id])
+}
+
+model storage_tb {
+  idx       Int        @id @default(autoincrement())
+  name      String     @db.VarChar(6)
+  fridge_tb FridgeTb[]
 }
