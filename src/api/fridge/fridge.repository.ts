@@ -80,17 +80,49 @@ export class FridgeRepository {
    */
   async insertFridge(createFridgeInput: CreateFridgeInput, storageIdx: number) {
     return await this.prisma.$queryRaw`
-    INSERT INTO fridge_tb (
-      food_id,
-      user_idx,
-      storage_idx,
-      amount,
-      added_at,
-      expired_at
-    ) VALUES (
-      ${createFridgeInput.foodId}, ${createFridgeInput.userIdx}, ${storageIdx}, ${createFridgeInput.amount}, ${createFridgeInput.addedAt}, ${createFridgeInput.expiredAt}
-    )
-  `;
+      INSERT INTO fridge_tb (
+        food_id,
+        user_idx,
+        storage_idx,
+        amount,
+        added_at,
+        expired_at
+      ) VALUES (
+        ${createFridgeInput.foodId}, ${createFridgeInput.userIdx}, ${storageIdx}, ${createFridgeInput.amount}, ${createFridgeInput.addedAt}, ${createFridgeInput.expiredAt}
+      )
+    `;
+  }
+
+  /**
+   * 냉동실 -> 냉장실 || 냉장실 -> 냉동실 로 옮길 때 storage idx 수정
+   */
+  async updateFridgeStorageIdxByFridgeIdx(
+    storageIdx: number,
+    fridgeIdx: number,
+    userIdx: number,
+  ) {
+    return await this.prisma.$queryRaw`
+      UPDATE fridge_tb
+      SET storage_idx = ${storageIdx}
+      WHERE idx = ${fridgeIdx}
+      AND user_idx = ${userIdx}
+    `;
+  }
+
+  /**
+   * 냉장고 음식 amount 수정
+   */
+  async updateFridgeAmountByFridgeIdx(
+    amount: number,
+    fridgeIdx: number,
+    userIdx: number,
+  ) {
+    return await this.prisma.$queryRaw`
+      UPDATE fridge_tb
+      SET amount = ${amount}, updated_at = NOW()
+      WHERE idx = ${fridgeIdx}
+      AND user_idx = ${userIdx}
+    `;
   }
 
   /**

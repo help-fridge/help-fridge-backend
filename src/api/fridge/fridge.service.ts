@@ -6,6 +6,7 @@ import {
 import { FridgeRepository } from './fridge.repository';
 import { CreateFridgeInput } from './input/create-fridge.input';
 import { DeleteFridgeInput } from './input/delete-fridge.input';
+import { UpdateFridgeInput } from './input/update-fridge.input';
 
 @Injectable()
 export class FridgeService {
@@ -54,6 +55,33 @@ export class FridgeService {
     };
 
     return await this.fridgeRepository.insertFridge(modifiedInput, storageIdx);
+  }
+
+  async updateFridgeByFridgeIdx(updateFridgeInput: UpdateFridgeInput) {
+    const { fridgeIdx, amount, storage, userIdx } = updateFridgeInput;
+
+    if (amount) {
+      return await this.fridgeRepository.updateFridgeAmountByFridgeIdx(
+        amount,
+        fridgeIdx,
+        userIdx,
+      );
+    }
+
+    if (storage) {
+      const storageIdx =
+        await this.fridgeRepository.selectStorageIdxByStorageName(storage);
+
+      if (!storageIdx) {
+        throw new BadRequestException('유효하지 않은 저장 방식입니다.');
+      }
+
+      return await this.fridgeRepository.updateFridgeStorageIdxByFridgeIdx(
+        storageIdx,
+        fridgeIdx,
+        userIdx,
+      );
+    }
   }
 
   /**
