@@ -24,11 +24,20 @@ export class FridgeRepository {
         u.name AS "unitName",
         c.name AS "categoryName",
         c.code AS "categoryCode"
+
       FROM fridge_tb fr
-      JOIN food_tb fd ON fr.food_id = fd.id
-      JOIN unit_tb u ON fd.unit_idx = u.idx
-      JOIN category_tb c ON fd.category_code = c.code
+
+      JOIN food_tb fd
+      ON fr.food_id = fd.id
+
+      JOIN unit_tb u
+      ON fd.unit_idx = u.idx
+
+      JOIN category_tb c
+      ON fd.category_code = c.code
+
       WHERE fr.user_idx = $1
+      
       ORDER BY ${sort}
     `;
 
@@ -88,7 +97,12 @@ export class FridgeRepository {
         added_at,
         expired_at
       ) VALUES (
-        ${createFridgeInput.foodId}, ${createFridgeInput.userIdx}, ${storageIdx}, ${createFridgeInput.amount}, ${createFridgeInput.addedAt}, ${createFridgeInput.expiredAt}
+        ${createFridgeInput.foodId},
+        ${createFridgeInput.userIdx},
+        ${storageIdx},
+        ${createFridgeInput.amount},
+        ${createFridgeInput.addedAt},
+        ${createFridgeInput.expiredAt}
       )
     `;
   }
@@ -173,7 +187,11 @@ export class FridgeRepository {
         INSERT INTO food_history_tb (
           food_id, user_idx, reason_idx, amount, added_at
         ) VALUES (
-          ${row.foodId}, ${row.userIdx}, ${row.reasonIdx}, ${row.amount}, ${row.addedAt}
+          ${row.foodId},
+          ${row.userIdx},
+          ${row.reasonIdx},
+          ${row.amount},
+          ${row.addedAt}
         )
       `;
     }

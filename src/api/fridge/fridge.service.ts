@@ -57,6 +57,9 @@ export class FridgeService {
     return await this.fridgeRepository.insertFridge(modifiedInput, storageIdx);
   }
 
+  /**
+   * 수량 update || storage idx update
+   */
   async updateFridgeByFridgeIdx(updateFridgeInput: UpdateFridgeInput) {
     const { fridgeIdx, amount, storage, userIdx } = updateFridgeInput;
 

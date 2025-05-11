@@ -57,6 +57,9 @@ export class FridgeController {
     );
   }
 
+  /**
+   * 수량 update || storage idx update
+   */
   @UseGuards(AuthGuard)
   @Patch('/:idx')
   async updateFridgeByFridgeIdx(
