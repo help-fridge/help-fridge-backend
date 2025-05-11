@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { RecipeRepository } from './recipe.repository';
-import { RECIPE_URL } from './common/constants/recipe-link.contant';
+import { RECIPE_URL } from './common/constants/recipe-link.constant';
 
 @Injectable()
 export class RecipeService {
