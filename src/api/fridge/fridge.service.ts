@@ -21,6 +21,25 @@ export class FridgeService {
   }
 
   /**
+   * 냉장 or 냉동에서 소비기한 3일 이하, 지난 거 제외 조회 + 냉동에서 1달 이상 소비하지 않은 것들 조회
+   */
+  async getFridgeListToBeConsumed(userIdx: number) {
+    const storageIdx =
+      await this.fridgeRepository.selectStorageIdxByStorageName('냉동');
+
+    console.log(storageIdx);
+
+    if (!storageIdx) {
+      throw new BadRequestException('유효하지 않은 저장 방식입니다.');
+    }
+
+    return await this.fridgeRepository.selectFridgeToBeConsumed(
+      userIdx,
+      storageIdx,
+    );
+  }
+
+  /**
    * 냉장고에 음식 넣기
    */
   async createFridge(createFridgeInput: CreateFridgeInput) {

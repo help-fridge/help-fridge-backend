@@ -35,6 +35,15 @@ export class FridgeController {
   }
 
   /**
+   * 냉장 or 냉동에서 소비기한 3일 이하, 지난 거 제외 조회 + 냉동에서 1달 이상 소비하지 않은 것들 조회
+   */
+  @UseGuards(AuthGuard)
+  @Get('/notification')
+  async getFridgeListToBeConsumed(@User('idx') userIdx: number) {
+    return await this.fridgeService.getFridgeListToBeConsumed(userIdx);
+  }
+
+  /**
    * 냉장고에 음식 넣기 (여러 개)
    */
   @UseGuards(AuthGuard)
