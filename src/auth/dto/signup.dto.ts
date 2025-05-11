@@ -1,5 +1,5 @@
 import { IsString, IsNotEmpty, Length, Matches } from 'class-validator';
-import { Regex } from '../common/guards/regex.constant';
+import { Regex } from '../common/constants/regex.constant';
 
 export class SignupDto {
   @IsString()
