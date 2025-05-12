@@ -1,8 +1,8 @@
 interface FridgeEntity {
-  idx: number;
+  fridgeIdx: number;
   amount: number;
   addedAt: Date;
-  expireIn: Date;
+  expireIn: number;
   foodName: string;
   unitName: string;
   categoryName: string;

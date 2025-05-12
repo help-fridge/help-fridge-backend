@@ -27,8 +27,6 @@ export class FridgeService {
     const storageIdx =
       await this.fridgeRepository.selectStorageIdxByStorageName('냉동');
 
-    console.log(storageIdx);
-
     if (!storageIdx) {
       throw new BadRequestException('유효하지 않은 저장 방식입니다.');
     }

@@ -16,10 +16,10 @@ export class FridgeRepository {
   ): Promise<FridgeEntity[]> {
     const query = `
       SELECT
-        fr.idx AS idx,
+        fr.idx AS fridgeIdx,
         fr.amount AS amount,
         fr.added_at AS "addedAt",
-        DATE_PART('day', fr.expired_at - NOW()) + 1 AS "expireIn",
+        DATE_PART('day', fr.expired_at - NOW()) AS "expireIn",
         fd.name AS "foodName",
         u.name AS "unitName",
         c.name AS "categoryName",
