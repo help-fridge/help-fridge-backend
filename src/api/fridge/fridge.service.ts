@@ -105,14 +105,20 @@ export class FridgeService {
         }
 
         const diff = target.amount - amount;
-
-        if (diff > 0) {
-          await this.fridgeRepository.updateFridgeAmountByFridgeIdx(
-            amount,
-            fridgeIdx,
-            userIdx,
-            tx,
-          );
+        if (amount === 0 || diff > 0) {
+          if (amount === 0) {
+            await this.fridgeRepository.deleteFridgeListByFridgeIdxList(
+              [fridgeIdx],
+              tx,
+            );
+          } else if (diff > 0) {
+            await this.fridgeRepository.updateFridgeAmountByFridgeIdx(
+              amount,
+              fridgeIdx,
+              userIdx,
+              tx,
+            );
+          }
 
           historyInsertList.push({
             foodId: target.food_id,
