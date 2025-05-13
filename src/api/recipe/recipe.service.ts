@@ -9,9 +9,11 @@ export class RecipeService {
   /**
    * 소비기한 임박한 것 기준으로 레시피 추천
    */
-  async getRecipeMatchStats(userIdx: number) {
-    const queryResult =
-      await this.recipeRepository.selectRecipeMatchStats(userIdx);
+  async recommendRecipeByExpiringOrOwned(userIdx: number, sort: string) {
+    const queryResult = await this.recipeRepository.selectRecipeMatchStats(
+      userIdx,
+      sort,
+    );
 
     return queryResult.map((row: any) => ({
       ...row,
@@ -19,6 +21,7 @@ export class RecipeService {
       totalOwnedCount: Number(row.totalOwnedCount),
       totalIngredientCount: Number(row.totalIngredientCount),
       nearExpiringRatio: row.nearExpiringRatio + '%',
+      totalOwnedRatio: row.totalOwnedRatio + '%',
       recipeUrl: RECIPE_URL + row.recipeId,
     }));
   }

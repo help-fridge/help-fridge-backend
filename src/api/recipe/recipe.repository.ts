@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/common/module/prisma.service';
+import { RecipeSort } from './common/enums/recipe-sort.enum';
 
 @Injectable()
 export class RecipeRepository {
@@ -8,26 +9,34 @@ export class RecipeRepository {
   /**
    * 소비기한 임박한 것 기준으로 레시피 추천
    */
-  async selectRecipeMatchStats(userIdx: number): Promise<
+  async selectRecipeMatchStats(
+    userIdx: number,
+    sort: string,
+  ): Promise<
     {
       recipeName: string;
       recipeId: string;
-      nearExpiringCount: bigint;
-      totalOwnedCount: bigint;
-      totalIngredientCount: bigint;
-      nearExpiringRatio: string;
-      totalOwnedRatio: string;
+      nearExpiringCount: number;
+      totalOwnedCount: number;
+      totalIngredientCount: number;
+      nearExpiringRatio: number;
+      totalOwnedRatio: number;
     }[]
   > {
-    return await this.prisma.$queryRaw`
+    const orderBySort =
+      sort === RecipeSort.NEAR_EXPIRING
+        ? `ORDER BY "nearExpiringCount" DESC, "nearExpiringRatio" DESC`
+        : `ORDER BY "totalOwnedCount" DESC, "totalOwnedRatio" DESC`;
+
+    const query = `
       SELECT 
         r.name AS "recipeName",
         rf.recipe_id AS "recipeId",
         COUNT(DISTINCT f.food_id) AS "nearExpiringCount",
         COUNT(DISTINCT fa.food_id) AS "totalOwnedCount",
-        COUNT(*) AS "totalIngredientCount",
-        ROUND(100.0 * COUNT(DISTINCT f.food_id) / COUNT(*), 1) AS "nearExpiringRatio",
-        ROUND(100.0 * COUNT(DISTINCT fa.food_id) / COUNT(*), 1) || '%' AS "totalOwnedRatio"
+        COUNT(DISTINCT rf.food_id) AS "totalIngredientCount",
+        ROUND(100.0 * COUNT(DISTINCT f.food_id) / COUNT(DISTINCT rf.food_id), 1) AS "nearExpiringRatio",
+        ROUND(100.0 * COUNT(DISTINCT fa.food_id) / COUNT(DISTINCT rf.food_id), 1) AS "totalOwnedRatio"
       FROM
         recipe_food_tb rf
       LEFT JOIN (
@@ -38,7 +47,7 @@ export class RecipeRepository {
         WHERE
           expired_at <= CURRENT_DATE + INTERVAL '3 days'
         AND
-          user_idx = 1
+          user_idx = ${userIdx}
       ) f
       ON
         rf.food_id = f.food_id
@@ -55,11 +64,11 @@ export class RecipeRepository {
         rf.recipe_id, r.name
       HAVING
         COUNT(DISTINCT f.food_id) > 0
-      ORDER BY 
-        "nearExpiringCount" DESC,
-        "nearExpiringRatio" DESC
+      ${orderBySort}
       LIMIT
         20;
     `;
+
+    return await this.prisma.$queryRawUnsafe(query);
   }
 }
