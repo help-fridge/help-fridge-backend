@@ -18,6 +18,7 @@ export class RecipeService {
       nearExpiringCount: Number(row.nearExpiringCount),
       totalOwnedCount: Number(row.totalOwnedCount),
       totalIngredientCount: Number(row.totalIngredientCount),
+      nearExpiringRatio: row.nearExpiringRatio + '%',
       recipeUrl: RECIPE_URL + row.recipeId,
     }));
   }
