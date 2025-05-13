@@ -82,7 +82,7 @@ export class FridgeRepository {
         name = ${name}
     `;
 
-    return result.idx ?? null;
+    return result?.idx ?? null;
   }
 
   /**
@@ -102,7 +102,7 @@ export class FridgeRepository {
         f.id = ${foodId}
     `;
 
-    return result.expiration ?? null;
+    return result?.expiration ?? null;
   }
 
   /**
@@ -118,7 +118,7 @@ export class FridgeRepository {
         name = ${reasonName}
     `;
 
-    return result.idx ?? null;
+    return result?.idx ?? null;
   }
 
   /**
