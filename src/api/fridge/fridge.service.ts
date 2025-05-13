@@ -36,9 +36,16 @@ export class FridgeService {
       await this.fridgeRepository.selectStorageIdxByStorageName(
         createFridgeInput.storage,
       );
-
     if (!storageIdx) {
       throw new BadRequestException('유효하지 않은 저장 방식입니다.');
+    }
+
+    if (
+      !(await this.fridgeRepository.selectFoodByFoodId(
+        createFridgeInput.foodId,
+      ))
+    ) {
+      throw new NotFoundException('존재하지 않는 음식입니다.');
     }
 
     const { addedAt, expiredAt, ...rest } = createFridgeInput;
@@ -86,7 +93,6 @@ export class FridgeService {
     if (storage) {
       const storageIdx =
         await this.fridgeRepository.selectStorageIdxByStorageName(storage);
-
       if (!storageIdx) {
         throw new BadRequestException('유효하지 않은 저장 방식입니다.');
       }
@@ -106,7 +112,6 @@ export class FridgeService {
     const reasonIdx = await this.fridgeRepository.selectReasonByReasonName(
       deleteFridgeInput.reason,
     );
-
     if (!reasonIdx) {
       throw new BadRequestException('해당 이유가 존재하지 않습니다.');
     }
@@ -117,7 +122,6 @@ export class FridgeService {
           deleteFridgeInput.fridgeIdxList,
           tx,
         );
-
       if (fridgeList.length === 0) {
         throw new NotFoundException('삭제할 냉장고 항목이 없습니다.');
       }

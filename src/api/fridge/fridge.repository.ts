@@ -122,6 +122,22 @@ export class FridgeRepository {
   }
 
   /**
+   * food id 조회
+   */
+  async selectFoodByFoodId(foodId: string) {
+    const [result] = await this.prisma.$queryRaw<{ id: string }[]>`
+      SELECT
+        id
+      FROM
+        food_tb
+      WHERE
+        name = ${foodId}
+    `;
+
+    return result?.id ?? null;
+  }
+
+  /**
    * 소비기한 3일 이하 조회 (지난 것은 제외)
    */
   async selectFridgeToBeConsumed(userIdx: number) {
