@@ -6,7 +6,7 @@ CREATE DATABASE help_fridge OWNER help_fridge_admin;
 
 CREATE TABLE category_tb
 (
-  code       char(4)     NOT NULL,
+  code       varchar(4)  NOT NULL,
   name       varchar(50) NOT NULL,
   expiration int         NOT NULL,
   PRIMARY KEY (code)
@@ -78,8 +78,8 @@ CREATE TABLE storage_tb
 
 CREATE TABLE unit_tb
 (
-  idx  int     NOT NULL GENERATED ALWAYS AS IDENTITY,
-  name char(3) NOT NULL UNIQUE,
+  idx  int        NOT NULL GENERATED ALWAYS AS IDENTITY,
+  name varchar(3) NOT NULL UNIQUE,
   PRIMARY KEY (idx)
 );
 

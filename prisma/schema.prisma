@@ -8,7 +8,7 @@ datasource db {
 }
 
 model CategoryTb {
-  code       String   @id @db.Char(4)
+  code       String   @id @db.VarChar(4)
   name       String   @db.VarChar(50)
   expiration Int
   foodTb     FoodTb[]
@@ -81,7 +81,7 @@ model FridgeTb {
 
 model UnitTb {
   idx    Int      @id @default(autoincrement())
-  name   String   @unique @db.Char(3)
+  name   String   @unique @db.VarChar(3)
   foodTb FoodTb[]
 
   @@map("unit_tb")
