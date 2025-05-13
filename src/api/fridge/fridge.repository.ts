@@ -205,11 +205,8 @@ export class FridgeRepository {
     storageIdx: number,
     fridgeIdx: number,
     userIdx: number,
-    tx?: Prisma.TransactionClient,
   ) {
-    const executor = tx ?? this.prisma;
-
-    return await executor.$queryRaw`
+    return await this.prisma.$queryRaw`
       UPDATE
         fridge_tb
       SET

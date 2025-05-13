@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
+  ParseIntPipe,
   Patch,
   Post,
   UseGuards,
@@ -14,6 +16,7 @@ import { Sort } from './common/decorators/fridge-sort.decorator';
 import { CreateFridgeListDto } from './dto/create-fridge-list.dto';
 import { DeleteFridgeDto } from './dto/delete-fridge.dto';
 import { UpdateFridgeListDto } from './dto/update-fridge-list.dto';
+import { UpdateFridgeStorageDto } from './dto/update-fridge-storage.dto';
 
 @Controller('fridge')
 export class FridgeController {
@@ -65,11 +68,11 @@ export class FridgeController {
   }
 
   /**
-   * 수량 update || storage idx update
+   * 수량 update
    */
   @UseGuards(AuthGuard)
-  @Patch('/:idx')
-  async updateFridgeByFridgeIdx(
+  @Patch('/many')
+  async updateFridgeListByFridgeIdx(
     @User('idx') userIdx: number,
     @Body() updateFridgeListDto: UpdateFridgeListDto,
   ) {
@@ -77,6 +80,23 @@ export class FridgeController {
       updateFridgeListDto.fridgeList,
       userIdx,
       updateFridgeListDto.reason,
+    );
+  }
+
+  /**
+   * storage idx update
+   */
+  @UseGuards(AuthGuard)
+  @Patch('/:idx')
+  async updateFridgeStorageByFridgeIdx(
+    @User('idx') userIdx: number,
+    @Body() updateFridgeStorageDto: UpdateFridgeStorageDto,
+    @Param('idx', ParseIntPipe) fridgeIdx: number,
+  ) {
+    return await this.fridgeService.updateFridgeStorageByFridgeIdx(
+      userIdx,
+      fridgeIdx,
+      updateFridgeStorageDto.storage,
     );
   }
 
