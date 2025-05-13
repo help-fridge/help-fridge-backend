@@ -69,6 +69,12 @@ export class FridgeService {
   async updateFridgeByFridgeIdx(updateFridgeInput: UpdateFridgeInput) {
     const { fridgeIdx, amount, storage, userIdx } = updateFridgeInput;
 
+    if (amount && storage) {
+      throw new BadRequestException(
+        'amount와 storage는 한 개만 올 수 있습니다.',
+      );
+    }
+
     if (amount) {
       return await this.fridgeRepository.updateFridgeAmountByFridgeIdx(
         amount,
