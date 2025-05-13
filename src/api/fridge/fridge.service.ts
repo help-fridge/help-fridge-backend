@@ -7,6 +7,7 @@ import { FridgeRepository } from './fridge.repository';
 import { CreateFridgeInput } from './input/create-fridge.input';
 import { DeleteFridgeInput } from './input/delete-fridge.input';
 import { UpdateFridgeInput } from './input/update-fridge.input';
+import { generateYMD } from './common/utils/date.util';
 
 @Injectable()
 export class FridgeService {
@@ -21,7 +22,7 @@ export class FridgeService {
   }
 
   /**
-   * 냉장 or 냉동에서 소비기한 3일 이하, 지난 거 제외 조회 + 냉동에서 1달 이상 소비하지 않은 것들 조회
+   * 소비기한 3일 이하 조회 (지난 것은 제외)
    */
   async getFridgeListToBeConsumed(userIdx: number) {
     const storageIdx =
@@ -65,10 +66,8 @@ export class FridgeService {
 
     const modifiedInput = {
       ...rest,
-      addedAt: addedAt ?? new Date(),
-      expiredAt:
-        expiredAt ??
-        new Date(Date.now() + ((expiration as number) - 1) * 86400000),
+      addedAt: addedAt ?? generateYMD(),
+      expiredAt: expiredAt ?? generateYMD(expiration as number),
     };
 
     return await this.fridgeRepository.insertFridge(modifiedInput, storageIdx);
