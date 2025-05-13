@@ -4,6 +4,7 @@ import { SignupDto } from './dto/signup.dto';
 import { LoginDto } from './dto/login.dto';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
+import { checkDuplicateId } from './dto/check-duplicate-id.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -11,6 +12,11 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly configService: ConfigService,
   ) {}
+
+  @Post('/check-duplicate')
+  async checkDuplicateId(@Body() checkDuplicateId: checkDuplicateId) {
+    return await this.authService.checkDuplicateId(checkDuplicateId.id);
+  }
 
   @Post('/signup')
   async signup(@Body() signupDto: SignupDto) {

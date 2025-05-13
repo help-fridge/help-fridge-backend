@@ -96,4 +96,13 @@ export class AuthService {
       payload,
     };
   }
+
+  async checkDuplicateId(id: string) {
+    const user = await this.userRepository.selectUserById(id);
+    if (user) {
+      throw new ConflictException('이미 존재하는 사용자입니다.');
+    }
+
+    return null;
+  }
 }
