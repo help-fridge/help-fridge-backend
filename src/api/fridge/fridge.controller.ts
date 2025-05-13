@@ -87,7 +87,7 @@ export class FridgeController {
    * storage idx update
    */
   @UseGuards(AuthGuard)
-  @Patch('/:idx')
+  @Patch('/:idx/storage')
   async updateFridgeStorageByFridgeIdx(
     @User('idx') userIdx: number,
     @Body() updateFridgeStorageDto: UpdateFridgeStorageDto,
