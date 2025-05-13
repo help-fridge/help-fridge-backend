@@ -32,31 +32,38 @@ export class FridgeRepository {
         fr.idx AS fridgeIdx,
         fr.amount AS amount,
         fr.added_at AS "addedAt",
-        DATE_PART('day', fr.expired_at - NOW()) AS "expireIn",
+        DATE_PART(
+          'day',
+          expired_at - DATE_TRUNC('day', NOW() AT TIME ZONE 'Asia/Seoul') AT TIME ZONE 'Asia/Seoul'
+        ) AS "expireIn",
         fd.name AS "foodName",
         u.name AS "unitName",
         s.idx AS "storageIdx",
         s.name AS "storageName",
         c.name AS "categoryName",
         c.code AS "categoryCode"
-
-      FROM fridge_tb fr
-
-      JOIN food_tb fd
-      ON fr.food_id = fd.id
-
-      JOIN unit_tb u
-      ON fd.unit_idx = u.idx
-
-      JOIN category_tb c
-      ON fd.category_code = c.code
-
-      JOIN storage_tb s
-      ON fr.storage_idx = s.idx
-
-      WHERE fr.user_idx = $1
-      
-      ORDER BY ${sort}
+      FROM
+        fridge_tb fr
+      JOIN
+        food_tb fd
+      ON
+        fr.food_id = fd.id
+      JOIN
+        unit_tb u
+      ON
+        fd.unit_idx = u.idx
+      JOIN
+        category_tb c
+      ON
+        fd.category_code = c.code
+      JOIN
+        storage_tb s
+      ON
+        fr.storage_idx = s.idx
+      WHERE
+        fr.user_idx = $1
+      ORDER BY
+        ${sort}
     `;
 
     return await this.prisma.$queryRawUnsafe(query, userIdx);
@@ -67,9 +74,12 @@ export class FridgeRepository {
    */
   async selectStorageIdxByStorageName(name: string): Promise<number | null> {
     const [result] = await this.prisma.$queryRaw<{ idx: number }[]>`
-      SELECT idx
-      FROM storage_tb
-      WHERE name = ${name}
+      SELECT
+        idx
+      FROM
+        storage_tb
+      WHERE
+        name = ${name}
     `;
 
     return result.idx ?? null;
@@ -80,10 +90,16 @@ export class FridgeRepository {
    */
   async selectCategoryByFoodId(foodId: string): Promise<number | null> {
     const [result] = await this.prisma.$queryRaw<{ expiration: number }[]>`
-      SELECT c.expiration
-      FROM food_tb f
-      JOIN category_tb c ON f.category_code = c.code
-      WHERE f.id = ${foodId}
+      SELECT
+        c.expiration
+      FROM
+        food_tb f
+      JOIN
+        category_tb c
+      ON
+        f.category_code = c.code
+      WHERE
+        f.id = ${foodId}
     `;
 
     return result.expiration ?? null;
@@ -94,9 +110,12 @@ export class FridgeRepository {
    */
   async selectReasonByReasonName(reasonName: string): Promise<number | null> {
     const [result] = await this.prisma.$queryRaw<{ idx: number }[]>`
-      SELECT idx
-      FROM reason_tb
-      WHERE name = ${reasonName}
+      SELECT
+        idx
+      FROM
+        reason_tb
+      WHERE
+        name = ${reasonName}
     `;
 
     return result.idx ?? null;
@@ -105,13 +124,17 @@ export class FridgeRepository {
   /**
    * 소비기한 3일 이하 조회 (지난 것은 제외)
    */
-  async selectFridgeToBeConsumed(userIdx: number, storageIdx: number) {
+  async selectFridgeToBeConsumed(userIdx: number) {
     return await this.prisma.$queryRaw<
       { fridgeIdx: number; updatedAt: Date; foodName: string }[]
     >`SELECT 
         f.idx AS "fridgeIdx",
         f.updated_at AS "updatedAt",
-        fd.name AS foodName
+        fd.name AS foodName,
+        DATE_PART(
+          'day',
+          expired_at - DATE_TRUNC('day', NOW() AT TIME ZONE 'Asia/Seoul') AT TIME ZONE 'Asia/Seoul'
+        ) AS "expireIn"
       FROM 
         fridge_tb f
       JOIN 
@@ -120,12 +143,17 @@ export class FridgeRepository {
         f.food_id = fd.id
       WHERE 
         f.user_idx = ${userIdx}
-      AND 
-        f.expired_at > NOW()
-      AND (
-          f.expired_at <= NOW() + INTERVAL '3 days'
-          OR (f.storage_idx = ${storageIdx} AND f.updated_at <= NOW() - INTERVAL '1 month')
+      AND
+        f.expired_at >= (
+          DATE_TRUNC('day', NOW() AT TIME ZONE 'Asia/Seoul')
+          AT TIME ZONE 'Asia/Seoul'
         )
+      AND (
+        f.expired_at <= (
+          DATE_TRUNC('day', NOW() AT TIME ZONE 'Asia/Seoul') AT TIME ZONE 'Asia/Seoul' 
+          + INTERVAL '3 days'
+        )
+      )
     `;
   }
 
@@ -134,14 +162,16 @@ export class FridgeRepository {
    */
   async insertFridge(createFridgeInput: CreateFridgeInput, storageIdx: number) {
     return await this.prisma.$queryRaw`
-      INSERT INTO fridge_tb (
-        food_id,
-        user_idx,
-        storage_idx,
-        amount,
-        added_at,
-        expired_at
-      ) VALUES (
+      INSERT INTO
+        fridge_tb (
+          food_id,
+          user_idx,
+          storage_idx,
+          amount,
+          added_at,
+          expired_at
+        )
+      VALUES (
         ${createFridgeInput.foodId},
         ${createFridgeInput.userIdx},
         ${storageIdx},
@@ -161,10 +191,14 @@ export class FridgeRepository {
     userIdx: number,
   ) {
     return await this.prisma.$queryRaw`
-      UPDATE fridge_tb
-      SET storage_idx = ${storageIdx}
-      WHERE idx = ${fridgeIdx}
-      AND user_idx = ${userIdx}
+      UPDATE
+        fridge_tb
+      SET
+        storage_idx = ${storageIdx}
+      WHERE
+        idx = ${fridgeIdx}
+      AND
+        user_idx = ${userIdx}
     `;
   }
 
@@ -177,10 +211,15 @@ export class FridgeRepository {
     userIdx: number,
   ) {
     return await this.prisma.$queryRaw`
-      UPDATE fridge_tb
-      SET amount = ${amount}, updated_at = NOW()
-      WHERE idx = ${fridgeIdx}
-      AND user_idx = ${userIdx}
+      UPDATE
+        fridge_tb
+      SET
+        amount = ${amount},
+        updated_at = NOW()
+      WHERE
+        idx = ${fridgeIdx}
+      AND
+        user_idx = ${userIdx}
     `;
   }
 
@@ -208,9 +247,14 @@ export class FridgeRepository {
     return await tx.$queryRawUnsafe<
       { food_id: string; amount: number; added_at: Date }[]
     >(`
-      SELECT food_id, amount, added_at
-      FROM fridge_tb
-      WHERE idx IN (${safeFridgeIdxList})
+      SELECT
+        food_id,
+        amount,
+        added_at
+      FROM
+        fridge_tb
+      WHERE
+        idx IN (${safeFridgeIdxList})
     `);
   }
 
@@ -229,9 +273,15 @@ export class FridgeRepository {
   ) {
     for (const row of rowList) {
       await tx.$queryRaw`
-        INSERT INTO food_history_tb (
-          food_id, user_idx, reason_idx, amount, added_at
-        ) VALUES (
+        INSERT INTO
+          food_history_tb (
+            food_id,
+            user_idx,
+            reason_idx,
+            amount,
+            added_at
+          )
+        VALUES (
           ${row.foodId},
           ${row.userIdx},
           ${row.reasonIdx},
@@ -250,8 +300,11 @@ export class FridgeRepository {
     tx: Prisma.TransactionClient,
   ) {
     await tx.$queryRawUnsafe(`
-      DELETE FROM fridge_tb
-      WHERE idx IN (${fridgeIdxList.join(',')})
+      DELETE
+      FROM
+        fridge_tb
+      WHERE
+        idx IN (${fridgeIdxList.join(',')})
     `);
   }
 }

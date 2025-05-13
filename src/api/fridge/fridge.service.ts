@@ -25,17 +25,7 @@ export class FridgeService {
    * 소비기한 3일 이하 조회 (지난 것은 제외)
    */
   async getFridgeListToBeConsumed(userIdx: number) {
-    const storageIdx =
-      await this.fridgeRepository.selectStorageIdxByStorageName('냉동');
-
-    if (!storageIdx) {
-      throw new BadRequestException('유효하지 않은 저장 방식입니다.');
-    }
-
-    return await this.fridgeRepository.selectFridgeToBeConsumed(
-      userIdx,
-      storageIdx,
-    );
+    return await this.fridgeRepository.selectFridgeToBeConsumed(userIdx);
   }
 
   /**

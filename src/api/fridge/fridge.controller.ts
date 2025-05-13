@@ -35,7 +35,7 @@ export class FridgeController {
   }
 
   /**
-   * 냉장 or 냉동에서 소비기한 3일 이하, 지난 거 제외 조회 + 냉동에서 1달 이상 소비하지 않은 것들 조회
+   * 소비기한 3일 이하 조회 (지난 것은 제외)
    */
   @UseGuards(AuthGuard)
   @Get('/notification')
