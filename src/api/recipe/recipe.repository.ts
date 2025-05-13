@@ -45,7 +45,10 @@ export class RecipeRepository {
         FROM
           fridge_tb
         WHERE
-          expired_at <= CURRENT_DATE + INTERVAL '3 days'
+          expired_at <= (
+            DATE_TRUNC('day', NOW() AT TIME ZONE 'Asia/Seoul') AT TIME ZONE 'Asia/Seoul' 
+            + INTERVAL '3 days'
+          )
         AND
           user_idx = ${userIdx}
       ) f
