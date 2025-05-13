@@ -131,7 +131,7 @@ export class FridgeRepository {
       FROM
         food_tb
       WHERE
-        name = ${foodId}
+        id = ${foodId}
     `;
 
     return result?.id ?? null;
