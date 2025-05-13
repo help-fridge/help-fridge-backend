@@ -16,6 +16,7 @@ import { Sort } from './common/decorators/fridge-sort.decorator';
 import { CreateFridgeListDto } from './dto/create-fridge-list.dto';
 import { DeleteFridgeDto } from './dto/delete-fridge.dto';
 import { UpdateFridgeDto } from './dto/update-fridge.dto';
+import { UpdateFridgeListDto } from './dto/update-fridge-list.dto';
 
 @Controller('fridge')
 export class FridgeController {
@@ -73,15 +74,13 @@ export class FridgeController {
   @Patch('/:idx')
   async updateFridgeByFridgeIdx(
     @User('idx') userIdx: number,
-    @Body() updateFridgeDto: UpdateFridgeDto,
-    @Param('idx', ParseIntPipe) fridgeIdx: number,
+    @Body() updateFridgeListDto: UpdateFridgeListDto,
   ) {
-    return await this.fridgeService.updateFridgeByFridgeIdx({
-      fridgeIdx,
-      amount: updateFridgeDto.amount ?? null,
-      storage: updateFridgeDto.storage ?? null,
+    return await this.fridgeService.updateFridgeListByFridgeIdx(
+      updateFridgeListDto.fridgeList,
       userIdx,
-    });
+      updateFridgeListDto.reason,
+    );
   }
 
   /**

@@ -205,8 +205,11 @@ export class FridgeRepository {
     storageIdx: number,
     fridgeIdx: number,
     userIdx: number,
+    tx?: Prisma.TransactionClient,
   ) {
-    return await this.prisma.$queryRaw`
+    const executor = tx ?? this.prisma;
+
+    return await executor.$queryRaw`
       UPDATE
         fridge_tb
       SET
@@ -225,8 +228,9 @@ export class FridgeRepository {
     amount: number,
     fridgeIdx: number,
     userIdx: number,
+    tx: Prisma.TransactionClient,
   ) {
-    return await this.prisma.$queryRaw`
+    return await tx.$queryRaw`
       UPDATE
         fridge_tb
       SET
@@ -234,8 +238,7 @@ export class FridgeRepository {
         updated_at = NOW()
       WHERE
         idx = ${fridgeIdx}
-      AND
-        user_idx = ${userIdx}
+      AND user_idx = ${userIdx}
     `;
   }
 
@@ -261,9 +264,10 @@ export class FridgeRepository {
       .join(',');
 
     return await tx.$queryRawUnsafe<
-      { food_id: string; amount: number; added_at: Date }[]
+      { idx: number; food_id: string; amount: number; added_at: Date }[]
     >(`
       SELECT
+        idx,
         food_id,
         amount,
         added_at

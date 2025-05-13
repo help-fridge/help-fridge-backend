@@ -8,6 +8,7 @@ import { CreateFridgeInput } from './input/create-fridge.input';
 import { DeleteFridgeInput } from './input/delete-fridge.input';
 import { UpdateFridgeInput } from './input/update-fridge.input';
 import { generateYMD } from './common/utils/date.util';
+import { UpdateFridgeDto } from './dto/update-fridge.dto';
 
 @Injectable()
 export class FridgeService {
@@ -73,36 +74,81 @@ export class FridgeService {
   /**
    * 수량 update || storage idx update
    */
-  async updateFridgeByFridgeIdx(updateFridgeInput: UpdateFridgeInput) {
-    const { fridgeIdx, amount, storage, userIdx } = updateFridgeInput;
+  async updateFridgeListByFridgeIdx(
+    updateFridgeList: UpdateFridgeDto[],
+    userIdx: number,
+    reason: string,
+  ) {
+    return await this.fridgeRepository.runTransaction(async (tx) => {
+      const fridgeIdxList = updateFridgeList.map((item) => item.fridgeIdx);
+      const fridgeList =
+        await this.fridgeRepository.selectFridgeListByFridgeIdxList(
+          fridgeIdxList,
+          tx,
+        );
 
-    if (amount && storage) {
-      throw new BadRequestException(
-        'amount와 storage는 한 개만 올 수 있습니다.',
-      );
-    }
-
-    if (amount) {
-      return await this.fridgeRepository.updateFridgeAmountByFridgeIdx(
-        amount,
-        fridgeIdx,
-        userIdx,
-      );
-    }
-
-    if (storage) {
-      const storageIdx =
-        await this.fridgeRepository.selectStorageIdxByStorageName(storage);
-      if (!storageIdx) {
-        throw new BadRequestException('유효하지 않은 저장 방식입니다.');
+      const reasonIdx =
+        await this.fridgeRepository.selectReasonByReasonName(reason);
+      if (!reasonIdx) {
+        throw new BadRequestException('해당 이유가 존재하지 않습니다.');
       }
 
-      return await this.fridgeRepository.updateFridgeStorageIdxByFridgeIdx(
-        storageIdx,
-        fridgeIdx,
-        userIdx,
-      );
-    }
+      const historyInsertList = [];
+
+      for (const item of updateFridgeList) {
+        const { fridgeIdx, amount, storage } = item;
+        if (amount && storage) {
+          throw new BadRequestException(
+            'amount와 storage는 한 개만 올 수 있습니다.',
+          );
+        }
+
+        if (amount) {
+          const target = fridgeList.find((target) => target.idx === fridgeIdx);
+          if (!target) {
+            throw new BadRequestException(
+              `존재하지 않거나 권한이 없는 fridge: ${fridgeIdx}`,
+            );
+          }
+
+          const diff = target.amount - amount;
+          await this.fridgeRepository.updateFridgeAmountByFridgeIdx(
+            amount,
+            fridgeIdx,
+            userIdx,
+            tx,
+          );
+
+          if (diff > 0) {
+            historyInsertList.push({
+              foodId: target.food_id,
+              userIdx,
+              reasonIdx,
+              amount: diff,
+              addedAt: new Date(),
+            });
+          }
+        }
+
+        if (storage) {
+          const storageIdx =
+            await this.fridgeRepository.selectStorageIdxByStorageName(storage);
+          if (!storageIdx) {
+            throw new BadRequestException('유효하지 않은 저장 방식입니다.');
+          }
+          await this.fridgeRepository.updateFridgeStorageIdxByFridgeIdx(
+            storageIdx,
+            fridgeIdx,
+            userIdx,
+            tx,
+          );
+        }
+      }
+
+      if (historyInsertList.length > 0) {
+        await this.fridgeRepository.insertFoodHistories(historyInsertList, tx);
+      }
+    });
   }
 
   /**

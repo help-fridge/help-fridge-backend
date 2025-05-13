@@ -8,6 +8,10 @@ import {
 import { Type } from 'class-transformer';
 
 export class UpdateFridgeDto {
+  @IsNumber()
+  @Type(() => Number)
+  fridgeIdx: number;
+
   @IsOptional()
   @IsNumber()
   @Min(0)
