@@ -1,0 +1,35 @@
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/common/module/prisma.service';
+
+@Injectable()
+export class FoodRepository {
+  constructor(private readonly prisma: PrismaService) {}
+
+  /**
+   * food name이 포함되는 food 조회
+   */
+  async selectFoodByFoodName(name: string) {
+    return await this.prisma.$queryRaw<{
+      foodId: string;
+      foodName: string;
+      unitName: string;
+    }>`
+      SELECT 
+        f.id AS "foodId",
+        f.name AS "foodName", 
+        u.name AS "unitName"
+      FROM 
+        food_tb f
+      JOIN 
+        unit_tb u
+      ON 
+        f.unit_idx = u.idx
+      WHERE 
+        f.name ILIKE '%' || ${name} || '%'
+      ORDER BY
+        (LOWER(f.name) = LOWER(${name})) DESC,
+        POSITION(LOWER(${name}) IN LOWER(f.name)),
+        LENGTH(f.name)
+    `;
+  }
+}

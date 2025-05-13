@@ -3,8 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  Param,
-  ParseIntPipe,
   Patch,
   Post,
   UseGuards,
@@ -15,7 +13,6 @@ import { AuthGuard } from 'src/auth/common/guards/auth.guard';
 import { Sort } from './common/decorators/fridge-sort.decorator';
 import { CreateFridgeListDto } from './dto/create-fridge-list.dto';
 import { DeleteFridgeDto } from './dto/delete-fridge.dto';
-import { UpdateFridgeDto } from './dto/update-fridge.dto';
 import { UpdateFridgeListDto } from './dto/update-fridge-list.dto';
 
 @Controller('fridge')

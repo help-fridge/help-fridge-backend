@@ -6,7 +6,6 @@ import {
 import { FridgeRepository } from './fridge.repository';
 import { CreateFridgeInput } from './input/create-fridge.input';
 import { DeleteFridgeInput } from './input/delete-fridge.input';
-import { UpdateFridgeInput } from './input/update-fridge.input';
 import { generateYMD } from './common/utils/date.util';
 import { UpdateFridgeDto } from './dto/update-fridge.dto';
 
