@@ -4,6 +4,47 @@
   <head>
     <meta charset="UTF-8" />
     <title>로그인</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 20px;
+      }
+      h2 {
+        color: #333;
+      }
+      form {
+        display: flex;
+        flex-direction: column;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      label {
+        display: block;
+        margin-bottom: 8px;
+      }
+      input[type='text'],
+      input[type='password'] {
+        padding: 8px;
+        margin-bottom: 10px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+      }
+      button {
+        background-color: #28a745;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #218838;
+      }
+    </style>
   </head>
   <body>
     <h2>🔐 로그인</h2>
@@ -42,14 +83,12 @@
 
           if (response.redirected) {
             window.location.href = response.url; // 자동 리디렉션
-          } else if (response.status === 401 || response.status === 400) {
-            const text = await response.text();
-            result.textContent = '❌ 로그인 실패: ' + text;
-          } else {
-            result.textContent = '❌ 예상치 못한 응답: ' + response.status;
+            return;
           }
+
+          alert('로그인 실패! 아이디와 비밀번호를 확인해 주세요.');
         } catch (err) {
-          result.textContent = '❌ 요청 실패: ' + err.message;
+          alert('알 수 없는 에러가 발생했습니다. 다시 시도해 주세요.');
         }
       });
     </script>

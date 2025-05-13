@@ -9,9 +9,15 @@ import { PrismaModule } from './common/module/prisma.module';
 import { ConfigModule } from '@nestjs/config';
 import { FridgeModule } from './api/fridge/fridge.module';
 import { RecipeModule } from './api/recipe/recipe.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', '..', 'help-fridge-frontend', 'dist'),
+      exclude: ['api'],
+    }),
     UserModule,
     AuthModule,
     PrismaModule,

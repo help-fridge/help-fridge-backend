@@ -13,7 +13,20 @@ export class FridgeRepository {
   async selectAllFridgeByUserIdx(
     userIdx: number,
     sort: string,
-  ): Promise<FridgeEntity[]> {
+  ): Promise<
+    {
+      fridgeIdx: number;
+      amount: number;
+      addedAt: Date;
+      expireIn: number;
+      foodName: string;
+      unitName: string;
+      storageIdx: number;
+      storageName: string;
+      categoryName: string;
+      categoryCode: number;
+    }[]
+  > {
     const query = `
       SELECT
         fr.idx AS fridgeIdx,
@@ -22,6 +35,8 @@ export class FridgeRepository {
         DATE_PART('day', fr.expired_at - NOW()) AS "expireIn",
         fd.name AS "foodName",
         u.name AS "unitName",
+        s.idx AS "storageIdx",
+        s.name AS "storageName",
         c.name AS "categoryName",
         c.code AS "categoryCode"
 
@@ -35,6 +50,9 @@ export class FridgeRepository {
 
       JOIN category_tb c
       ON fd.category_code = c.code
+
+      JOIN storage_tb s
+      ON fr.storage_idx = s.idx
 
       WHERE fr.user_idx = $1
       
@@ -85,25 +103,26 @@ export class FridgeRepository {
   }
 
   /**
-   * 냉장 or 냉동에서 소비기한 3일 이하, 지난 거 제외 조회 + 냉동에서 1달 이상 소비하지 않은 것들 조회
+   * 소비기한 3일 이하 조회 (지난 것은 제외)
    */
   async selectFridgeToBeConsumed(userIdx: number, storageIdx: number) {
     return await this.prisma.$queryRaw<
       { fridgeIdx: number; updatedAt: Date; foodName: string }[]
-    >`
-      SELECT 
+    >`SELECT 
         f.idx AS "fridgeIdx",
         f.updated_at AS "updatedAt",
         fd.name AS foodName
-
-      FROM fridge_tb f
-
-      JOIN food_tb fd
-      ON f.food_id = fd.id
-
-      WHERE f.user_idx = ${userIdx}
-        AND f.expired_at > NOW()
-        AND (
+      FROM 
+        fridge_tb f
+      JOIN 
+        food_tb fd
+      ON 
+        f.food_id = fd.id
+      WHERE 
+        f.user_idx = ${userIdx}
+      AND 
+        f.expired_at > NOW()
+      AND (
           f.expired_at <= NOW() + INTERVAL '3 days'
           OR (f.storage_idx = ${storageIdx} AND f.updated_at <= NOW() - INTERVAL '1 month')
         )
