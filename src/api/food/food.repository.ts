@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/common/module/prisma.service';
+import { SelectFood } from './type/select-food.type';
 
 @Injectable()
 export class FoodRepository {
@@ -9,11 +10,7 @@ export class FoodRepository {
    * food name이 포함되는 food 조회
    */
   async selectFoodByFoodName(name: string) {
-    return await this.prisma.$queryRaw<{
-      foodId: string;
-      foodName: string;
-      unitName: string;
-    }>`
+    return await this.prisma.$queryRaw<SelectFood[]>`
       SELECT 
         f.id AS "foodId",
         f.name AS "foodName", 
