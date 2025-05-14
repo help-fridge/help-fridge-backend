@@ -26,7 +26,7 @@ export class RecipeRepository {
     const orderBySort =
       sort === RecipeSort.NEAR_EXPIRING
         ? `ORDER BY "nearExpiringCount" DESC, "nearExpiringRatio" DESC`
-        : `ORDER BY "totalOwnedCount" DESC, "totalOwnedRatio" DESC`;
+        : `ORDER BY "totalOwnedRatio" DESC, "nearExpiringRatio" DESC, "totalOwnedCount" DESC`;
 
     const query = `
       SELECT 
