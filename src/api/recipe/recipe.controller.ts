@@ -17,9 +17,9 @@ export class RecipeController {
   @Get('/recommend')
   @ApiQuery({
     name: 'sort',
-    example: '간장',
+    example: 'near_expiring',
     description:
-      '레시피 추천 기준(sort === near_expiring 이면 "버리기 싫어요" api, sort === total_owned 이면 "나가기 귀찮아요" api',
+      '레시피 추천 기준\n- near_expiring: 소비기한 임박 재료 기반 ("버리기 싫어요" API)\n- total_owned: 보유 재료 개수 기반 ("나가기 귀찮아요" API)',
   })
   async recommendRecipeByExpiringOrOwned(
     @User('idx') userIdx: number,
