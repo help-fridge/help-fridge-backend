@@ -17,6 +17,8 @@ import { CreateFridgeListDto } from './dto/create-fridge-list.dto';
 import { DeleteFridgeDto } from './dto/delete-fridge.dto';
 import { UpdateFridgeListDto } from './dto/update-fridge-list.dto';
 import { UpdateFridgeStorageDto } from './dto/update-fridge-storage.dto';
+import { ApiQuery } from '@nestjs/swagger';
+import { SelectAllFridge } from './type/select-all-fridge.type';
 
 @Controller('fridge')
 export class FridgeController {
@@ -24,14 +26,19 @@ export class FridgeController {
 
   /**
    * 냉장고에 가지고 있는 음식조회
-   * @param sort 이름 오름차순, 넣은날짜 오름차순, 만료날짜 오름차순
    */
   @UseGuards(AuthGuard)
   @Get('/all')
+  @ApiQuery({
+    name: 'sort',
+    example: 'near_expiring',
+    description:
+      '냉장고 정렬 기준\n- name_asc: 이름 오름차순\n- added_asc: 넣은 날짜 오름차순\n- expire_in_asc: 만료까지 남은 일수 오름차순',
+  })
   async getAllFridgeByUserIdx(
     @User('idx') userIdx: number,
     @Sort() sort: string,
-  ) {
+  ): Promise<SelectAllFridge[]> {
     return await this.fridgeService.getAllFridgeByUserIdx(userIdx, sort);
   }
 

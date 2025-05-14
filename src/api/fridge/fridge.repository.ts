@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/common/module/prisma.service';
 import { CreateFridgeInput } from './input/create-fridge.input';
 import { Prisma } from '@prisma/client';
+import { SelectAllFridge } from './type/select-all-fridge.type';
 
 @Injectable()
 export class FridgeRepository {
@@ -13,20 +14,7 @@ export class FridgeRepository {
   async selectAllFridgeByUserIdx(
     userIdx: number,
     sort: string,
-  ): Promise<
-    {
-      fridgeIdx: number;
-      amount: number;
-      addedAt: Date;
-      expireIn: number;
-      foodName: string;
-      unitName: string;
-      storageIdx: number;
-      storageName: string;
-      categoryName: string;
-      categoryCode: number;
-    }[]
-  > {
+  ): Promise<SelectAllFridge[]> {
     const query = `
       SELECT
         fr.idx AS fridgeIdx,

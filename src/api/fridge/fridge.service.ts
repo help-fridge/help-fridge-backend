@@ -8,6 +8,7 @@ import { CreateFridgeInput } from './input/create-fridge.input';
 import { DeleteFridgeInput } from './input/delete-fridge.input';
 import { generateYMD } from './common/utils/date.util';
 import { UpdateFridgeDto } from './dto/update-fridge.dto';
+import { SelectAllFridge } from './type/select-all-fridge.type';
 
 @Injectable()
 export class FridgeService {
@@ -17,7 +18,10 @@ export class FridgeService {
    * 냉장고에 가지고 있는 음식조회
    * @param sort 이름 오름차순, 넣은날짜 오름차순, 만료날짜 오름차순
    */
-  async getAllFridgeByUserIdx(userIdx: number, sort: string) {
+  async getAllFridgeByUserIdx(
+    userIdx: number,
+    sort: string,
+  ): Promise<SelectAllFridge[]> {
     return await this.fridgeRepository.selectAllFridgeByUserIdx(userIdx, sort);
   }
 
