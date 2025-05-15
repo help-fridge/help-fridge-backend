@@ -78,7 +78,7 @@ export class FridgeController {
   }
 
   /**
-   * 수량 update
+   * 냉장고 음식의 수량 update (여러 개 update 가능). 변경된 수량이 기존의 수량보다 많으면 안 됨.
    */
   @UseGuards(AuthGuard)
   @Patch('/many')
