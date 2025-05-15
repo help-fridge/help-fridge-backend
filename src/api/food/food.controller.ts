@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  ParseIntPipe,
+  Post,
+  Put,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { FoodService } from './food.service';
 import { ApiQuery } from '@nestjs/swagger';
 import { AuthGuard } from 'src/api/auth/common/guards/auth.guard';
@@ -27,11 +36,32 @@ export class FoodController {
   }
 
   /**
-   * 음식 추가하는 메서드
+   * 음식 추가하는 API
    */
   @UseGuards(AuthGuard)
   @Post('')
   async createFood(@Body() dto: CreateFoodInput): Promise<FoodEntity> {
     return await this.foodService.createFood(dto);
+  }
+
+  /**
+   * 음식을 수정하는 API
+   */
+  @UseGuards(AuthGuard)
+  @Put('/:idx')
+  async updateFood(
+    @Query('idx', ParseIntPipe) idx: number,
+    @Body() dto: CreateFoodInput,
+  ): Promise<void> {
+    return await this.foodService.updateFood(idx, dto);
+  }
+
+  /**
+   * 음식을 삭제하는 API
+   */
+  @UseGuards(AuthGuard)
+  @Post('/delete/:idx')
+  async deleteFood(@Query('idx', ParseIntPipe) idx: number): Promise<void> {
+    return await this.foodService.deleteFood(idx);
   }
 }
