@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { SelectFoodField } from 'src/api/food/entity/prisma/select-food.field';
+import { CreateFoodInput } from 'src/api/food/input/create-food.input';
+import { UpdateFoodInput } from 'src/api/food/input/update-food.input';
 import { PrismaService } from 'src/common/module/prisma.service';
 
 @Injectable()
@@ -58,6 +60,86 @@ export class FoodRepository {
       },
       orderBy: {
         idx: 'desc',
+      },
+    });
+  }
+
+  public async insertFood(input: CreateFoodInput): Promise<SelectFoodField> {
+    return await this.prisma.food.create({
+      select: {
+        idx: true,
+        name: true,
+        expiration: true,
+        foodUnit: {
+          select: {
+            unit: {
+              select: {
+                idx: true,
+                name: true,
+              },
+            },
+          },
+        },
+        foodCategory: {
+          select: {
+            idx: true,
+            name: true,
+          },
+        },
+      },
+      data: {
+        name: input.name,
+        expiration: input.expiration,
+        foodUnit: {
+          createMany: {
+            data: input.unitIdxList.map((unitIdx) => ({
+              unitIdx,
+            })),
+          },
+        },
+        foodCategory: {
+          connect: {
+            idx: input.categoryIdx,
+          },
+        },
+      },
+    });
+  }
+
+  public async updateFoodByIdx(
+    idx: number,
+    input: UpdateFoodInput,
+  ): Promise<void> {
+    await this.prisma.food.update({
+      where: {
+        idx,
+      },
+      data: {
+        name: input.name,
+        expiration: input.expiration,
+        foodUnit: input.unitIdxList
+          ? {
+              deleteMany: {},
+              createMany: {
+                data: input.unitIdxList.map((unitIdx) => ({
+                  unitIdx,
+                })),
+              },
+            }
+          : undefined,
+        foodCategory: {
+          connect: {
+            idx: input.categoryIdx,
+          },
+        },
+      },
+    });
+  }
+
+  public async deleteFoodByIdx(idx: number): Promise<void> {
+    await this.prisma.food.delete({
+      where: {
+        idx,
       },
     });
   }
