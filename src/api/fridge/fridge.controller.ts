@@ -78,7 +78,8 @@ export class FridgeController {
   }
 
   /**
-   * 냉장고 음식의 수량 update (여러 개 update 가능). 변경된 수량이 기존의 수량보다 많으면 안 됨.
+   * 냉장고 음식의 수량 update (여러 개 update 가능). 변경된 수량이 기존의 수량보다 많으면 안 됨. 메인 페이지에서 먹음 or 버림 버튼을 눌렀을 때 사용되는 api.
+   * 만약에 수량이 0으로 입력되면 해당 item 삭제됨
    */
   @UseGuards(AuthGuard)
   @Patch('/many')
@@ -94,7 +95,7 @@ export class FridgeController {
   }
 
   /**
-   * storage idx update
+   * 저장 공간 idx 변경. 현재 위치하는 저장 공간을 drag 해서 다른 저장 공간으로 옮길 때 사용되는 api
    */
   @UseGuards(AuthGuard)
   @Patch('/:idx/storage')

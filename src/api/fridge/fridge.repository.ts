@@ -165,7 +165,10 @@ export class FridgeRepository {
   /**
    * 냉장고에 음식 넣기
    */
-  async insertFridge(createFridgeInput: CreateFridgeInput, storageIdx: number) {
+  async insertFridge(
+    createFridgeInput: CreateFridgeInput,
+    storageIdx: number,
+  ): Promise<void> {
     return await this.prisma.$queryRaw`
       INSERT INTO
         fridge_tb (
@@ -194,7 +197,7 @@ export class FridgeRepository {
     storageIdx: number,
     fridgeIdx: number,
     userIdx: number,
-  ) {
+  ): Promise<void> {
     return await this.prisma.$queryRaw`
       UPDATE
         fridge_tb
@@ -215,7 +218,7 @@ export class FridgeRepository {
     fridgeIdx: number,
     userIdx: number,
     tx: Prisma.TransactionClient,
-  ) {
+  ): Promise<void> {
     return await tx.$queryRaw`
       UPDATE
         fridge_tb
@@ -276,7 +279,7 @@ export class FridgeRepository {
       addedAt: Date;
     }[],
     tx: Prisma.TransactionClient,
-  ) {
+  ): Promise<void> {
     for (const row of rowList) {
       await tx.$queryRaw`
         INSERT INTO
@@ -304,7 +307,7 @@ export class FridgeRepository {
   async deleteFridgeListByFridgeIdxList(
     fridgeIdxList: number[],
     tx: Prisma.TransactionClient,
-  ) {
+  ): Promise<void> {
     await tx.$queryRawUnsafe(`
       DELETE
       FROM
