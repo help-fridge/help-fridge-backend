@@ -3,6 +3,7 @@ import { FoodRepository } from './food.repository';
 import { FoodEntity } from 'src/api/food/entity/food.entity';
 import { CreateFoodInput } from 'src/api/food/input/create-food.input';
 import { UpdateFoodInput } from 'src/api/food/input/update-food.input';
+import { GetFoodAllInput } from 'src/api/food/input/get-food-all.input';
 
 @Injectable()
 export class FoodService {
@@ -14,8 +15,8 @@ export class FoodService {
     return food && FoodEntity.from(food);
   }
 
-  async getFoodAll(): Promise<FoodEntity[]> {
-    const foods = await this.foodRepository.selectFoodAll();
+  async getFoodAll(input: GetFoodAllInput): Promise<FoodEntity[]> {
+    const foods = await this.foodRepository.selectFoodAll(input);
 
     return foods.map((food) => FoodEntity.from(food));
   }

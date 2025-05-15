@@ -1,8 +1,9 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { FoodService } from './food.service';
-import { AuthGuard } from 'src/auth/common/guards/auth.guard';
 import { ApiQuery } from '@nestjs/swagger';
-import { SelectFood } from './type/select-food.type';
+import { AuthGuard } from 'src/api/auth/common/guards/auth.guard';
+import { FoodEntity } from 'src/api/food/entity/food.entity';
+import { GetFoodAllDto } from 'src/api/food/dto/get-food-all.dto';
 
 @Controller('food')
 export class FoodController {
@@ -21,8 +22,8 @@ export class FoodController {
     description: '검색할 음식 이름 (부분일치)',
   })
   async getFridgeListByFoodName(
-    @Query('name') name: string,
-  ): Promise<SelectFood[]> {
-    return await this.foodService.getFridgeListByFoodName(name);
+    @Query() dto: GetFoodAllDto,
+  ): Promise<FoodEntity[]> {
+    return await this.foodService.getFoodAll(dto);
   }
 }

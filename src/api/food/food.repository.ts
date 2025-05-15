@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { SelectFoodField } from 'src/api/food/entity/prisma/select-food.field';
 import { CreateFoodInput } from 'src/api/food/input/create-food.input';
+import { GetFoodAllInput } from 'src/api/food/input/get-food-all.input';
 import { UpdateFoodInput } from 'src/api/food/input/update-food.input';
 import { PrismaService } from 'src/common/module/prisma.service';
 
@@ -35,8 +36,15 @@ export class FoodRepository {
     });
   }
 
-  public async selectFoodAll(): Promise<SelectFoodField[]> {
+  public async selectFoodAll(
+    input: GetFoodAllInput,
+  ): Promise<SelectFoodField[]> {
     return await this.prisma.food.findMany({
+      where: {
+        name: {
+          contains: input.name,
+        },
+      },
       select: {
         idx: true,
         name: true,
