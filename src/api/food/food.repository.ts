@@ -33,6 +33,35 @@ export class FoodRepository {
     });
   }
 
+  public async selectFoodAll(): Promise<SelectFoodField[]> {
+    return await this.prisma.food.findMany({
+      select: {
+        idx: true,
+        name: true,
+        expiration: true,
+        foodUnit: {
+          select: {
+            unit: {
+              select: {
+                idx: true,
+                name: true,
+              },
+            },
+          },
+        },
+        foodCategory: {
+          select: {
+            idx: true,
+            name: true,
+          },
+        },
+      },
+      orderBy: {
+        idx: 'desc',
+      },
+    });
+  }
+
   /**
    * food name이 포함되는 food 조회
    */
