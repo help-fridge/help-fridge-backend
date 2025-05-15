@@ -109,3 +109,75 @@ ALTER TABLE local_account_tb
   ADD CONSTRAINT FK_user_tb_TO_local_account_tb
     FOREIGN KEY (idx)
     REFERENCES user_tb (idx);
+
+-- USER seed
+INSERT INTO user_tb (nickname) VALUES 
+('user1'); -- 1
+
+-- LOCAL ACCOUNT seed
+INSERT INTO local_account_tb (idx, id, pw) VALUES 
+(1, 'guest1234', '$2b$10$02Dvy3Oh5uo7OqJM0NgNou76PQLUqL2rkUj5FTOKZ7d8YmB8so9fa');
+
+INSERT storage_tb (name) VALUES
+('냉장'),
+('냉동'),
+('서랍');
+
+INSERT food_category_tb (idx, name) VALUES
+(1, '과일'),
+(2, '채소'),
+(3, '육류'),
+(4, '유제품'),
+(5, '가공식품'),
+(6, '음료수');
+
+INSERT food_tb (category_idx, name, expiration) VALUES
+(1, '사과', 7),
+(1, '바나나', 5),
+(1, '오렌지', 10),
+(2, '상추', 3),
+(2, '시금치', 4),
+(3, '소고기', 10),
+(3, '닭고기', 7),
+(4, '우유', 5),
+(4, '요구르트', 14),
+(5, '라면', 30),
+(5, '김치', 14),
+(6, '콜라', 90);
+
+INSERT unit_tb (name) VALUES
+('개'),
+('팩'),
+('봉지'),
+('통'),
+('박스');
+
+INSERT food_unit_tb (food_idx, unit_idx) VALUES
+(1, 1),
+(2, 1),
+(3, 1),
+(4, 1),
+(5, 1),
+(6, 1),
+(7, 1),
+(8, 1),
+(9, 2),
+(10, 2),
+(11, 3),
+(12, 4),
+(13, 5);
+
+INSERT fridge_tb (storage_idx, food_idx, unit_idx, user_idx, amount) VALUES
+(1, 1, 1, 1, 3),
+(1, 2, 1, 1, 5),
+(1, 3, 1, 1, 2),
+(2, 4, 1, 1, 4),
+(2, 5, 1, 1, 6),
+(3, 6, 1, 1, 8),
+(3, 7, 1, 1, 10),
+(3, 8, 1, 1, 12),
+(2, 9, 2, 1, 20),
+(2,10 ,2 ,1 ,15),
+(3 ,11 ,3 ,1 ,25),
+(3 ,12 ,4 ,1 ,30),
+(3 ,13 ,5 ,1 ,35);

@@ -62,23 +62,25 @@ export class AuthService {
    * 로그인
    */
   async login(loginInput: LoginInput): Promise<TokenPair> {
-    const user = await this.userRepository.selectUserById(loginInput.id);
-    if (!user) {
+    const account = await this.localAccountService.getAccountById(
+      loginInput.id,
+    );
+    if (!account) {
       throw new UnauthorizedException('존재하지 않은 사용자압니다.');
     }
 
-    const isMatch = await bcrypt.compare(loginInput.pw, user.pw);
+    const isMatch = await bcrypt.compare(loginInput.pw, account.pw);
     if (!isMatch) {
       throw new UnauthorizedException('비밀번호가 일치하지 않습니다.');
     }
 
-    const payload = { idx: user.idx };
+    const payload = { idx: account.idx };
     const jwtAccessToken =
       await this.loginTokenService.signAccessToken(payload);
     const jwtRefreshToken =
       await this.loginTokenService.signRefreshToken(payload);
 
-    this.saveRefreshToken(user.idx, jwtRefreshToken);
+    this.saveRefreshToken(account.idx, jwtRefreshToken);
 
     return { accessToken: jwtAccessToken, refreshToken: jwtRefreshToken };
   }
@@ -106,7 +108,7 @@ export class AuthService {
   }
 
   async checkDuplicateId(id: string) {
-    const user = await this.userRepository.selectUserById(id);
+    const user = await this.localAccountService.getAccountById(id);
     if (user) {
       throw new ConflictException('이미 존재하는 사용자입니다.');
     }
