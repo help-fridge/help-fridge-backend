@@ -5,17 +5,19 @@ import {
 } from '@nestjs/common';
 import { SignupInput } from '../input/signup.input';
 import { LoginInput } from '../input/login.input';
-import { UserRepository } from 'src/api/user/user.repository';
 import * as bcrypt from 'bcrypt';
 import { LoginTokenService } from './login-token.service';
+import { LocalAccountService } from 'src/api/account/local-account.service';
+import { UserRepository } from 'src/api/user/user.repository';
 
 @Injectable()
 export class AuthService {
   private readonly REFRESH_TOKEN_STORE: Record<number, string> = {};
 
   constructor(
-    private readonly userRepository: UserRepository,
     private readonly loginTokenService: LoginTokenService,
+    private readonly localAccountService: LocalAccountService,
+    private readonly userRepository: UserRepository,
   ) {}
 
   /**
@@ -36,17 +38,23 @@ export class AuthService {
    * 회원가입
    */
   async signup(signupInput: SignupInput) {
-    const user = await this.userRepository.selectUserById(signupInput.id);
-    if (user) {
+    const account = await this.localAccountService.getAccountById(
+      signupInput.id,
+    );
+
+    if (account) {
       throw new ConflictException('이미 존재하는 Id 입니다.');
     }
 
     const hashedPw = await bcrypt.hash(signupInput.pw, 10);
 
-    return await this.userRepository.createUser({
+    const user = await this.userRepository.insertUser({
+      nickname: signupInput.nickname,
+    });
+
+    return await this.localAccountService.createAccount(user.idx, {
       id: signupInput.id,
       pw: hashedPw,
-      nickname: signupInput.nickname,
     });
   }
 

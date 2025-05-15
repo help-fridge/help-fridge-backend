@@ -19,9 +19,9 @@ import { FoodModule } from './api/food/food.module';
       rootPath: join(__dirname, '..', '..', 'help-fridge-frontend', 'dist'),
       exclude: ['api'],
     }),
+    PrismaModule,
     UserModule,
     AuthModule,
-    PrismaModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
