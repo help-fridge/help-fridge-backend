@@ -1,10 +1,10 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { RecipeService } from './recipe.service';
-import { AuthGuard } from 'src/auth/common/guards/auth.guard';
 import { User } from 'src/common/decorator/user.decorator';
 import { Sort } from './common/decorators/recipe-sort.decorator';
 import { SelectRecipeMatchStats } from './type/select-recipe-match-stats.type';
 import { ApiQuery } from '@nestjs/swagger';
+import { AuthGuard } from 'src/api/auth/common/guards/auth.guard';
 
 @Controller('recipe')
 export class RecipeController {

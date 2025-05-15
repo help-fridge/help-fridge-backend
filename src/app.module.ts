@@ -4,7 +4,6 @@ import { AppService } from './app.service';
 import { UserController } from './api/user/user.controller';
 import { UserService } from './api/user/user.service';
 import { UserModule } from './api/user/user.module';
-import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './common/module/prisma.module';
 import { ConfigModule } from '@nestjs/config';
 import { FridgeModule } from './api/fridge/fridge.module';
@@ -12,6 +11,7 @@ import { RecipeModule } from './api/recipe/recipe.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { FoodModule } from './api/food/food.module';
+import { AuthModule } from 'src/api/auth/auth.module';
 
 @Module({
   imports: [

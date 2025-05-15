@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './services/auth.service';
 import { LoginTokenService } from './services/login-token.service';
@@ -8,6 +8,7 @@ import { AuthGuard } from './common/guards/auth.guard';
 import { UserModule } from 'src/api/user/user.module';
 import { LocalAccountModule } from 'src/api/account/local-account.module';
 
+@Global()
 @Module({
   imports: [
     JwtModule.registerAsync({
