@@ -113,7 +113,7 @@ export class FridgeRepository {
   /**
    * food id 조회
    */
-  async selectFoodByFoodId(foodId: string) {
+  async selectFoodByFoodId(foodId: string): Promise<string | null> {
     const [result] = await this.prisma.$queryRaw<{ id: string }[]>`
       SELECT
         id

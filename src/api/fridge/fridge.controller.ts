@@ -55,7 +55,7 @@ export class FridgeController {
   }
 
   /**
-   * 냉장고에 음식 넣기 (여러 개)
+   * 냉장고에 음식 넣기 (여러 개). 음식 추가 페이지에서 사용
    */
   @UseGuards(AuthGuard)
   @Post()
