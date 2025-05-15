@@ -112,7 +112,7 @@ export class FridgeController {
   }
 
   /**
-   * 냉장고에 음식 삭제 후 history 테이블에 삽입 (여러 개)
+   * 냉장고에 존재하는 음식 여러 개 삭제. 먹음 or 버림 버튼 눌러서 x 버튼 누를 때 사용하는 api
    */
   @UseGuards(AuthGuard)
   @Delete('/many')
