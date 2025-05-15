@@ -9,6 +9,7 @@ import { DeleteFridgeInput } from './input/delete-fridge.input';
 import { generateYMD } from './common/utils/date.util';
 import { UpdateFridgeDto } from './dto/update-fridge.dto';
 import { SelectAllFridge } from './type/select-all-fridge.type';
+import { selectFridgeToBeConsumed } from './type/select-fridge-to-be-consumed.type';
 
 @Injectable()
 export class FridgeService {
@@ -28,7 +29,9 @@ export class FridgeService {
   /**
    * 소비기한 3일 이하 조회 (지난 것은 제외)
    */
-  async getFridgeListToBeConsumed(userIdx: number) {
+  async getFridgeListToBeConsumed(
+    userIdx: number,
+  ): Promise<selectFridgeToBeConsumed[]> {
     return await this.fridgeRepository.selectFridgeToBeConsumed(userIdx);
   }
 

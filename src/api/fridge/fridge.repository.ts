@@ -3,6 +3,7 @@ import { PrismaService } from 'src/common/module/prisma.service';
 import { CreateFridgeInput } from './input/create-fridge.input';
 import { Prisma } from '@prisma/client';
 import { SelectAllFridge } from './type/select-all-fridge.type';
+import { selectFridgeToBeConsumed } from './type/select-fridge-to-be-consumed.type';
 
 @Injectable()
 export class FridgeRepository {
@@ -128,10 +129,10 @@ export class FridgeRepository {
   /**
    * 소비기한 3일 이하 조회 (지난 것은 제외)
    */
-  async selectFridgeToBeConsumed(userIdx: number) {
-    return await this.prisma.$queryRaw<
-      { fridgeIdx: number; updatedAt: Date; foodName: string }[]
-    >`SELECT 
+  async selectFridgeToBeConsumed(
+    userIdx: number,
+  ): Promise<selectFridgeToBeConsumed[]> {
+    return await this.prisma.$queryRaw<selectFridgeToBeConsumed[]>`SELECT 
         f.idx AS "fridgeIdx",
         f.updated_at AS "updatedAt",
         fd.name AS foodName,

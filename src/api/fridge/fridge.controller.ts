@@ -19,13 +19,14 @@ import { UpdateFridgeListDto } from './dto/update-fridge-list.dto';
 import { UpdateFridgeStorageDto } from './dto/update-fridge-storage.dto';
 import { ApiQuery } from '@nestjs/swagger';
 import { SelectAllFridge } from './type/select-all-fridge.type';
+import { selectFridgeToBeConsumed } from './type/select-fridge-to-be-consumed.type';
 
 @Controller('fridge')
 export class FridgeController {
   constructor(private readonly fridgeService: FridgeService) {}
 
   /**
-   * 냉장고에 가지고 있는 음식조회
+   * 메인 페이지에서 냉장고에 가지고 있는 음식조회
    */
   @UseGuards(AuthGuard)
   @Get('/all')
@@ -43,11 +44,13 @@ export class FridgeController {
   }
 
   /**
-   * 소비기한 3일 이하 조회 (지난 것은 제외)
+   * 소비기한 3일 이하 조회 (지난 것은 제외). 알림해줄 때 사용 (아직 보류라서 사용하는 곳 없음)
    */
   @UseGuards(AuthGuard)
   @Get('/notification')
-  async getFridgeListToBeConsumed(@User('idx') userIdx: number) {
+  async getFridgeListToBeConsumed(
+    @User('idx') userIdx: number,
+  ): Promise<selectFridgeToBeConsumed[]> {
     return await this.fridgeService.getFridgeListToBeConsumed(userIdx);
   }
 
