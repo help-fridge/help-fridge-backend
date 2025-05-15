@@ -31,9 +31,9 @@ CREATE TABLE fridge_tb
 (
   idx         int                      NOT NULL GENERATED ALWAYS AS IDENTITY,
   storage_idx int                      NOT NULL,
-  food_tb     int                      NOT NULL,
+  food_idx     int                      NOT NULL,
   unit_idx    int                      NOT NULL,
-  user_idx    in                       NOT NULL,
+  user_idx    int                      NOT NULL,
   amount      int                      NOT NULL,
   created_at  timestamp with time zone NOT NULL DEFAULT NOW(),
   expired_at  timestamp with time zone NOT NULL,
@@ -42,7 +42,7 @@ CREATE TABLE fridge_tb
 
 CREATE TABLE local_account_tb
 (
-  idx in      NOT NULL,
+  idx int     NOT NULL,
   id  varchar NOT NULL,
   pw  varchar NOT NULL,
   PRIMARY KEY (idx)
@@ -64,7 +64,7 @@ CREATE TABLE unit_tb
 
 CREATE TABLE user_tb
 (
-  idx        in                       NOT NULL GENERATED ALWAYS AS IDENTITY,
+  idx        int                      NOT NULL GENERATED ALWAYS AS IDENTITY,
   nickname   varchar                  NOT NULL,
   created_at timestamp with time zone NOT NULL DEFAULT NOW(),
   PRIMARY KEY (idx)
@@ -82,7 +82,7 @@ ALTER TABLE food_tb
 
 ALTER TABLE fridge_tb
   ADD CONSTRAINT FK_food_tb_TO_fridge_tb
-    FOREIGN KEY (food_tb)
+    FOREIGN KEY (food_idx)
     REFERENCES food_tb (idx);
 
 ALTER TABLE fridge_tb

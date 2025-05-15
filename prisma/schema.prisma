@@ -7,108 +7,85 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model CategoryTb {
-  code       String   @id @db.VarChar(4)
-  name       String   @db.VarChar(50)
-  expiration Int
-  foodTb     FoodTb[]
+model FoodCategory {
+  idx  Int    @id
+  name String @db.VarChar
+  food Food[]
 
-  @@map("category_tb")
+  @@map("food_category_tb")
 }
 
-model FoodHistoryTb {
-  idx       Int      @id @default(autoincrement())
-  food_id   String   @db.VarChar(7)
-  userIdx   Int      @map("user_idx")
-  reasonIdx Int      @map("reason_idx")
-  amount    Int
-  addedAt   DateTime @map("added_at") @db.Timestamptz(6)
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
-  food_tb   FoodTb   @relation(fields: [food_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_food_tb_to_food_history_tb")
-  reasonTb  ReasonTb @relation(fields: [reasonIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_reason_tb_to_food_history_tb")
-  userTb    UserTb   @relation(fields: [userIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_tb_to_food_history_tb")
-
-  @@map("food_history_tb")
-}
-
-model FoodTb {
-  id              String           @id @db.VarChar(7)
-  name            String           @db.VarChar(50)
-  categoryCode    String           @map("category_code") @db.Char(4)
-  unitIdx         Int              @map("unit_idx")
-  food_history_tb FoodHistoryTb[]
-  categoryTb      CategoryTb       @relation(fields: [categoryCode], references: [code], onDelete: NoAction, onUpdate: NoAction, map: "fk_category_tb_to_food_tb")
-  unitTb          UnitTb           @relation(fields: [unitIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_unit_tb_to_food_tb")
-  fridge_tb       FridgeTb[]
-  recipe_food_tb  recipe_food_tb[]
+model Food {
+  idx          Int          @id @default(autoincrement())
+  categoryIdx  Int          @map("category_idx")
+  name         String       @db.VarChar
+  expiration   Int
+  foodCategory FoodCategory @relation(fields: [categoryIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_food_category_tb_to_food_tb")
+  foodUnit     FoodUnit[]
+  fridge       Fridge[]
 
   @@map("food_tb")
 }
 
-model ReasonTb {
-  idx           Int             @id @default(autoincrement())
-  name          String          @unique @db.VarChar(10)
-  foodHistoryTb FoodHistoryTb[]
+model FoodUnit {
+  foodIdx Int  @map("food_idx")
+  unitIdx Int  @map("unit_idx")
+  foodTb  Food @relation(fields: [foodIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_food_tb_to_food_unit_tb")
+  unitTb  Unit @relation(fields: [unitIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_unit_tb_to_food_unit_tb")
 
-  @@map("reason_tb")
+  @@id([foodIdx, unitIdx])
+  @@map("food_unit_tb")
 }
 
-model RecipeTb {
-  id             Int              @id
-  name           String           @db.VarChar(50)
-  amount         String?          @db.VarChar(50)
-  time           String?          @db.VarChar(30)
-  recipe_food_tb recipe_food_tb[]
-
-  @@map("recipe_tb")
-}
-
-model FridgeTb {
-  idx         Int        @id @default(autoincrement())
-  food_id     String     @db.VarChar(7)
-  userIdx     Int        @map("user_idx")
-  storage_idx Int
-  amount      Int
-  addedAt     DateTime   @default(now()) @map("added_at") @db.Timestamptz(6)
-  expiredAt   DateTime   @map("expired_at") @db.Timestamptz(6)
-  updated_at  DateTime   @default(now()) @db.Timestamptz(6)
-  food_tb     FoodTb     @relation(fields: [food_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_food_tb_to_fridge_tb")
-  storage_tb  storage_tb @relation(fields: [storage_idx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_storage_tb_to_fridge_tb")
-  userTb      UserTb     @relation(fields: [userIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_tb_to_fridge_tb")
+model Fridge {
+  idx        Int      @id @default(autoincrement())
+  storageIdx Int      @map("storage_idx")
+  foodIdx    Int      @map("food_idx")
+  unitIdx    Int      @map("unit_idx")
+  userIdx    Int      @map("user_idx")
+  amount     Int
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  expiredAt  DateTime @map("expired_at") @db.Timestamptz(6)
+  food       Food     @relation(fields: [foodIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_food_tb_to_fridge_tb")
+  storage    Storage  @relation(fields: [storageIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_storage_tb_to_fridge_tb")
+  unit       Unit     @relation(fields: [unitIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_unit_tb_to_fridge_tb")
+  user       User     @relation(fields: [userIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_tb_to_fridge_tb")
 
   @@map("fridge_tb")
 }
 
-model UnitTb {
+model LocalAccount {
+  idx  Int    @id
+  id   String @db.VarChar
+  pw   String @db.VarChar
+  user User   @relation(fields: [idx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_tb_to_local_account_tb")
+
+  @@map("local_account_tb")
+}
+
+model Storage {
   idx    Int      @id @default(autoincrement())
-  name   String   @unique @db.VarChar(3)
-  foodTb FoodTb[]
+  name   String   @db.VarChar
+  fridge Fridge[]
+
+  @@map("storage_tb")
+}
+
+model Unit {
+  idx      Int        @id @default(autoincrement())
+  name     String     @db.VarChar
+  foodUnit FoodUnit[]
+  fridge   Fridge[]
 
   @@map("unit_tb")
 }
 
-model UserTb {
-  idx           Int             @id @default(autoincrement())
-  id            String          @unique @db.VarChar(20)
-  pw            String          @db.VarChar(100)
-  nickname      String          @db.VarChar(6)
-  foodHistoryTb FoodHistoryTb[]
-  fridgeTb      FridgeTb[]
+model User {
+  idx          Int           @id @default(autoincrement())
+  nickname     String        @db.VarChar
+  createdAt    DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  fridge       Fridge[]
+  localAccount LocalAccount?
 
   @@map("user_tb")
-}
-
-model recipe_food_tb {
-  recipe_id Int
-  food_id   String   @db.VarChar(7)
-  food_tb   FoodTb   @relation(fields: [food_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_food_tb_to_recipe_food_tb")
-  recipe_tb RecipeTb @relation(fields: [recipe_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_recipe_tb_to_recipe_food_tb")
-
-  @@id([recipe_id, food_id])
-}
-
-model storage_tb {
-  idx       Int        @id @default(autoincrement())
-  name      String     @db.VarChar(6)
-  fridge_tb FridgeTb[]
 }
