@@ -1,12 +1,12 @@
 import { FoodCategoryEntity } from 'src/api/food/entity/food-category.entity';
-import { FoodUnitEntity } from 'src/api/food/entity/food-unit.entity';
+import { UnitEntity } from 'src/common/entity/unit.entity';
 import { SelectFoodField } from 'src/api/food/entity/prisma/select-food.field';
 
 export class FoodEntity {
   idx: number;
   name: string;
   category: FoodCategoryEntity;
-  unit: FoodUnitEntity[];
+  unit: UnitEntity[];
   expiration: number;
 
   constructor(data: FoodEntity) {
@@ -18,7 +18,7 @@ export class FoodEntity {
       idx: food.idx,
       name: food.name,
       category: FoodCategoryEntity.from(food.foodCategory),
-      unit: food.foodUnit.map(({ unit }) => FoodUnitEntity.from(unit)),
+      unit: food.foodUnit.map(({ unit }) => UnitEntity.from(unit)),
       expiration: food.expiration,
     });
   }
