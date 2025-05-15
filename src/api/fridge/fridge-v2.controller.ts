@@ -14,7 +14,6 @@ import { GetFridgeAllDto } from 'src/api/fridge/dto-v2/get-fridge-all.dto';
 import { UpdateFridgeDto } from 'src/api/fridge/dto-v2/update-fridge.dto';
 import { FridgeEntity } from 'src/api/fridge/entity/fridge.entity';
 import { FridgeV2Service } from 'src/api/fridge/fridge-v2.service';
-import { FridgeService } from 'src/api/fridge/fridge.service';
 import { User } from 'src/common/decorator/user.decorator';
 
 @Controller('/v2/fridge')
