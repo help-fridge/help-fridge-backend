@@ -11,10 +11,16 @@ export class FoodRepository {
    */
   async selectFoodByFoodName(name: string) {
     return await this.prisma.$queryRaw<SelectFood[]>`
-      SELECT 
+      SELECT
         f.id AS "foodId",
         f.name AS "foodName", 
-        u.name AS "unitName"
+        u.idx AS "unitIdx",
+        u.name AS "unitName",
+        f.expiration AS "expiration",
+        c.name AS "categoryName",
+        c.code AS "categoryCode",
+        c.expiration AS "categoryExpiration",
+        f.category_code AS "categoryCode"
       FROM 
         food_tb f
       JOIN 
