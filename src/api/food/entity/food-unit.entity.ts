@@ -1,4 +1,4 @@
-import { SelectFood } from 'src/api/food/type/select-food.type';
+import { Unit } from '@prisma/client';
 
 export class FoodUnitEntity {
   idx: number;
@@ -8,10 +8,10 @@ export class FoodUnitEntity {
     Object.assign(this, data);
   }
 
-  static from(data: SelectFood): FoodUnitEntity {
+  static from(unit: Unit): FoodUnitEntity {
     return new FoodUnitEntity({
-      idx: data.unitIdx,
-      name: data.unitName,
+      idx: unit.idx,
+      name: unit.name,
     });
   }
 }

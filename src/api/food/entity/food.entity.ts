@@ -1,25 +1,25 @@
 import { FoodCategoryEntity } from 'src/api/food/entity/food-category.entity';
 import { FoodUnitEntity } from 'src/api/food/entity/food-unit.entity';
-import { SelectFood } from 'src/api/food/type/select-food.type';
+import { SelectFoodField } from 'src/api/food/entity/prisma/select-food.field';
 
 export class FoodEntity {
-  id: string;
+  idx: number;
   name: string;
   category: FoodCategoryEntity;
-  unit: FoodUnitEntity;
+  unit: FoodUnitEntity[];
   expiration: number;
 
   constructor(data: FoodEntity) {
     Object.assign(this, data);
   }
 
-  static from(data: SelectFood): FoodEntity {
+  static from(food: SelectFoodField): FoodEntity {
     return new FoodEntity({
-      id: data.foodId,
-      name: data.foodName,
-      category: FoodCategoryEntity.from(data),
-      unit: FoodUnitEntity.from(data),
-      expiration: data.expiration,
+      idx: food.idx,
+      name: food.name,
+      category: FoodCategoryEntity.from(food.foodCategory),
+      unit: food.foodUnit.map(({ unit }) => FoodUnitEntity.from(unit)),
+      expiration: food.expiration,
     });
   }
 }

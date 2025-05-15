@@ -30,8 +30,8 @@ model Food {
 model FoodUnit {
   foodIdx Int  @map("food_idx")
   unitIdx Int  @map("unit_idx")
-  foodTb  Food @relation(fields: [foodIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_food_tb_to_food_unit_tb")
-  unitTb  Unit @relation(fields: [unitIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_unit_tb_to_food_unit_tb")
+  food    Food @relation(fields: [foodIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_food_tb_to_food_unit_tb")
+  unit    Unit @relation(fields: [unitIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_unit_tb_to_food_unit_tb")
 
   @@id([foodIdx, unitIdx])
   @@map("food_unit_tb")

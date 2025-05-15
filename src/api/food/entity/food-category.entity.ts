@@ -1,19 +1,17 @@
-import { SelectFood } from 'src/api/food/type/select-food.type';
+import { FoodCategory } from '@prisma/client';
 
 export class FoodCategoryEntity {
-  code: string;
+  idx: number;
   name: string;
-  expiration: number;
 
   constructor(data: FoodCategoryEntity) {
     Object.assign(this, data);
   }
 
-  static from(data: SelectFood): FoodCategoryEntity {
+  static from(category: FoodCategory): FoodCategoryEntity {
     return new FoodCategoryEntity({
-      code: data.categoryCode,
-      name: data.categoryName,
-      expiration: data.expiration,
+      idx: category.idx,
+      name: category.name,
     });
   }
 }
