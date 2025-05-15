@@ -20,7 +20,7 @@ export class FridgeEntity {
 
   createdAt: Date;
 
-  expiredAt: Date;
+  expiredAt: Date | null;
 
   constructor(data: FridgeEntity) {
     Object.assign(this, data);
