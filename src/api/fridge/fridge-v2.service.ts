@@ -3,6 +3,7 @@ import { FridgeEntity } from 'src/api/fridge/entity/fridge.entity';
 import { FridgeV2Repository } from 'src/api/fridge/fridge-v2.repository';
 import { CreateFridgeInput } from 'src/api/fridge/input-v2/create-fridge.input';
 import { GetFridgeAllInput } from 'src/api/fridge/input-v2/get-fridge-all.input';
+import { UpdateFridgeInput } from 'src/api/fridge/input-v2/update-fridge.input';
 
 @Injectable()
 export class FridgeV2Service {
@@ -31,7 +32,7 @@ export class FridgeV2Service {
 
   public async updateFridge(
     fridgeIdx: number,
-    input: CreateFridgeInput,
+    input: UpdateFridgeInput,
   ): Promise<void> {
     await this.fridgeRepository.updateFridgeByIdx(fridgeIdx, input);
   }

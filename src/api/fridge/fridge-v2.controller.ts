@@ -1,6 +1,62 @@
-import { Controller } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Post,
+  Put,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from 'src/api/auth/common/guards/auth.guard';
+import { CreateFridgeDto } from 'src/api/fridge/dto-v2/create-fridge.dto';
+import { GetFridgeAllDto } from 'src/api/fridge/dto-v2/get-fridge-all.dto';
+import { UpdateFridgeDto } from 'src/api/fridge/dto-v2/update-fridge.dto';
+import { FridgeEntity } from 'src/api/fridge/entity/fridge.entity';
+import { FridgeV2Service } from 'src/api/fridge/fridge-v2.service';
+import { FridgeService } from 'src/api/fridge/fridge.service';
+import { User } from 'src/common/decorator/user.decorator';
 
 @Controller('/v2/fridge')
 export class FridgeV2Controller {
-  constructor() {}
+  constructor(private readonly fridgeService: FridgeV2Service) {}
+
+  /**
+   * 냉장고에 있는 음식 조회
+   */
+  @Get('')
+  @UseGuards(AuthGuard)
+  public async getFridgeAll(
+    @Query() dto: GetFridgeAllDto,
+    @User('idx') userIdx: number,
+  ): Promise<FridgeEntity[]> {
+    return await this.fridgeService.getFridgeAll({
+      ...dto,
+      userIdx,
+    });
+  }
+
+  @Post('')
+  @UseGuards(AuthGuard)
+  public async createFridge(
+    @Body() dto: CreateFridgeDto,
+    @User('idx') userIdx: number,
+  ): Promise<FridgeEntity> {
+    return await this.fridgeService.createFridge(userIdx, dto);
+  }
+
+  @Put('/:idx')
+  @UseGuards(AuthGuard)
+  public async updateFridge(
+    @Body() dto: UpdateFridgeDto,
+    @User('idx') userIdx: number,
+  ): Promise<void> {
+    return await this.fridgeService.updateFridge(userIdx, dto);
+  }
+
+  @Delete('/:idx')
+  @UseGuards(AuthGuard)
+  public async deleteFridge(@Query('idx') idx: number): Promise<void> {
+    return await this.fridgeService.deleteFridge(idx);
+  }
 }
