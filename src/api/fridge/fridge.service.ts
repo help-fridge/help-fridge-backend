@@ -22,8 +22,13 @@ export class FridgeService {
   async getAllFridgeByUserIdx(
     userIdx: number,
     sort: string,
+    type: number,
   ): Promise<SelectAllFridge[]> {
-    return await this.fridgeRepository.selectAllFridgeByUserIdx(userIdx, sort);
+    return await this.fridgeRepository.selectAllFridgeByUserIdx(
+      userIdx,
+      sort,
+      type,
+    );
   }
 
   /**

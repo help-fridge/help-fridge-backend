@@ -20,6 +20,7 @@ import { UpdateFridgeStorageDto } from './dto/update-fridge-storage.dto';
 import { ApiQuery } from '@nestjs/swagger';
 import { SelectAllFridge } from './type/select-all-fridge.type';
 import { selectFridgeToBeConsumed } from './type/select-fridge-to-be-consumed.type';
+import { Type } from './common/decorators/storage-type.decorator';
 
 @Controller('fridge')
 export class FridgeController {
@@ -36,11 +37,17 @@ export class FridgeController {
     description:
       '냉장고 정렬 기준\n- name_asc: 이름 오름차순\n- added_asc: 넣은 날짜 오름차순\n- expire_in_asc: 만료까지 남은 일수 오름차순',
   })
+  @ApiQuery({
+    name: 'type',
+    example: 1,
+    description: '저장 공간 타입\n- 1: 냉장\n- 2: 냉동\n- 3: 서랍',
+  })
   async getAllFridgeByUserIdx(
     @User('idx') userIdx: number,
     @Sort() sort: string,
+    @Type() type: number,
   ): Promise<SelectAllFridge[]> {
-    return await this.fridgeService.getAllFridgeByUserIdx(userIdx, sort);
+    return await this.fridgeService.getAllFridgeByUserIdx(userIdx, sort, type);
   }
 
   /**

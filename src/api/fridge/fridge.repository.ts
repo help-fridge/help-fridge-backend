@@ -15,6 +15,7 @@ export class FridgeRepository {
   async selectAllFridgeByUserIdx(
     userIdx: number,
     sort: string,
+    type: number,
   ): Promise<SelectAllFridge[]> {
     const query = `
       SELECT
@@ -51,11 +52,13 @@ export class FridgeRepository {
         fr.storage_idx = s.idx
       WHERE
         fr.user_idx = $1
+      AND
+        fr.storage_idx = $2
       ORDER BY
         ${sort}
     `;
 
-    return await this.prisma.$queryRawUnsafe(query, userIdx);
+    return await this.prisma.$queryRawUnsafe(query, userIdx, type);
   }
 
   /**
