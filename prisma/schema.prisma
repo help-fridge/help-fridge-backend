@@ -38,18 +38,18 @@ model FoodUnit {
 }
 
 model Fridge {
-  idx        Int      @id @default(autoincrement())
-  storageIdx Int      @map("storage_idx")
-  foodIdx    Int      @map("food_idx")
-  unitIdx    Int      @map("unit_idx")
-  userIdx    Int      @map("user_idx")
+  idx        Int       @id @default(autoincrement())
+  storageIdx Int       @map("storage_idx")
+  foodIdx    Int       @map("food_idx")
+  unitIdx    Int       @map("unit_idx")
+  userIdx    Int       @map("user_idx")
   amount     Int
-  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
-  expiredAt  DateTime @map("expired_at") @db.Timestamptz(6)
-  food       Food     @relation(fields: [foodIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_food_tb_to_fridge_tb")
-  storage    Storage  @relation(fields: [storageIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_storage_tb_to_fridge_tb")
-  unit       Unit     @relation(fields: [unitIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_unit_tb_to_fridge_tb")
-  user       User     @relation(fields: [userIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_tb_to_fridge_tb")
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  expiredAt  DateTime? @map("expired_at") @db.Timestamptz(6)
+  food       Food      @relation(fields: [foodIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_food_tb_to_fridge_tb")
+  storage    Storage   @relation(fields: [storageIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_storage_tb_to_fridge_tb")
+  unit       Unit      @relation(fields: [unitIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_unit_tb_to_fridge_tb")
+  user       User      @relation(fields: [userIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_tb_to_fridge_tb")
 
   @@map("fridge_tb")
 }

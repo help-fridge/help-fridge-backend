@@ -31,12 +31,12 @@ CREATE TABLE fridge_tb
 (
   idx         int                      NOT NULL GENERATED ALWAYS AS IDENTITY,
   storage_idx int                      NOT NULL,
-  food_idx     int                      NOT NULL,
+  food_idx    int                      NOT NULL,
   unit_idx    int                      NOT NULL,
   user_idx    int                      NOT NULL,
   amount      int                      NOT NULL,
   created_at  timestamp with time zone NOT NULL DEFAULT NOW(),
-  expired_at  timestamp with time zone NOT NULL,
+  expired_at  timestamp with time zone NULL,
   PRIMARY KEY (idx)
 );
 
