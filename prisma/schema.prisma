@@ -105,10 +105,14 @@ model FridgeHistory {
   historyReason HistoryReason @relation(fields: [reasonIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_history_reason_tb_to_fridge_history_tb")
   unit          Unit          @relation(fields: [unitIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_unit_tb_to_fridge_history_tb")
   user          User          @relation(fields: [userIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_tb_to_fridge_history_tb")
+
+  @@map("fridge_history_tb")
 }
 
 model HistoryReason {
   idx           Int             @id @default(autoincrement())
   name          String          @db.VarChar
   FridgeHistory FridgeHistory[]
+
+  @@map("history_reason_tb")
 }

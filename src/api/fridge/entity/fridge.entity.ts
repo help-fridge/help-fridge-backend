@@ -29,7 +29,7 @@ export class FridgeEntity {
   static from(fridge: SelectFridgeField): FridgeEntity {
     return new FridgeEntity({
       idx: fridge.idx,
-      storage: fridge as any,
+      storage: fridge.storage.idx as any,
       food: FoodEntity.from(fridge.food),
       unit: UnitEntity.from(fridge.unit),
       user: FridgeUserEntity.from(fridge.user),

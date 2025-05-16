@@ -58,7 +58,7 @@ export class LoginTokenService {
    */
   async signAccessToken(payload: AccessTokenPayload): Promise<string> {
     const token = await this.jwtService.signAsync(payload, {
-      expiresIn: '10m',
+      expiresIn: '3d',
     });
     if (!token) {
       throw new Error('not implement');
@@ -72,7 +72,7 @@ export class LoginTokenService {
    * @author 이수인
    */
   async signRefreshToken(payload: RefreshTokenPayload): Promise<string> {
-    const token = await this.jwtService.signAsync(payload, { expiresIn: '1h' });
+    const token = await this.jwtService.signAsync(payload, { expiresIn: '3d' });
     if (!token) {
       throw new Error('not implement');
     }

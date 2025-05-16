@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
+  ParseIntPipe,
   Post,
   Put,
   Query,
@@ -30,10 +32,11 @@ export class FridgeV2Controller {
     @Query() dto: GetFridgeAllDto,
     @User('idx') userIdx: number,
   ): Promise<FridgeEntity[]> {
-    return await this.fridgeService.getFridgeAll({
+    const data = await this.fridgeService.getFridgeAll({
       ...dto,
       userIdx,
     });
+    return data;
   }
 
   @Post('')
@@ -60,12 +63,13 @@ export class FridgeV2Controller {
     return await this.fridgeService.deleteFridge(idx);
   }
 
-  @Put('/amount/:idx')
+  @Put('/:idx/amount')
   @UseGuards(AuthGuard)
   public async updateFridgeAmount(
     @Body() dto: UpdateFridgeAmountDto,
+    @Param('idx', ParseIntPipe) idx: number,
     @User('idx') userIdx: number,
   ): Promise<void> {
-    return await this.fridgeService.updateFridgeAmount(userIdx, dto);
+    return await this.fridgeService.updateFridgeAmount(idx, dto);
   }
 }

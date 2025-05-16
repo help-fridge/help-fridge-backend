@@ -108,6 +108,9 @@ export class FridgeV2Repository {
           },
         },
       },
+      orderBy: {
+        idx: 'asc',
+      },
     });
   }
 
