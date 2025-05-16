@@ -52,9 +52,10 @@ export class FridgeV2Controller {
   @UseGuards(AuthGuard)
   public async updateFridge(
     @Body() dto: UpdateFridgeDto,
+    @Param('idx', ParseIntPipe) idx: number,
     @User('idx') userIdx: number,
   ): Promise<void> {
-    return await this.fridgeService.updateFridge(userIdx, dto);
+    return await this.fridgeService.updateFridge(idx, dto);
   }
 
   @Delete('/:idx')
