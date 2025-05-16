@@ -11,6 +11,7 @@ import {
 import { AuthGuard } from 'src/api/auth/common/guards/auth.guard';
 import { CreateFridgeDto } from 'src/api/fridge/dto-v2/create-fridge.dto';
 import { GetFridgeAllDto } from 'src/api/fridge/dto-v2/get-fridge-all.dto';
+import { UpdateFridgeAmountDto } from 'src/api/fridge/dto-v2/update-fridge-amount.dto';
 import { UpdateFridgeDto } from 'src/api/fridge/dto-v2/update-fridge.dto';
 import { FridgeEntity } from 'src/api/fridge/entity/fridge.entity';
 import { FridgeV2Service } from 'src/api/fridge/fridge-v2.service';
@@ -57,5 +58,14 @@ export class FridgeV2Controller {
   @UseGuards(AuthGuard)
   public async deleteFridge(@Query('idx') idx: number): Promise<void> {
     return await this.fridgeService.deleteFridge(idx);
+  }
+
+  @Put('/amount/:idx')
+  @UseGuards(AuthGuard)
+  public async updateFridgeAmount(
+    @Body() dto: UpdateFridgeAmountDto,
+    @User('idx') userIdx: number,
+  ): Promise<void> {
+    return await this.fridgeService.updateFridgeAmount(userIdx, dto);
   }
 }

@@ -6,9 +6,10 @@ import { AuthModule } from 'src/api/auth/auth.module';
 import { FridgeV2Controller } from 'src/api/fridge/fridge-v2.controller';
 import { FridgeV2Repository } from 'src/api/fridge/fridge-v2.repository';
 import { FridgeV2Service } from 'src/api/fridge/fridge-v2.service';
+import { FridgeHistoryModule } from 'src/api/fridge-history/fridge-history.module';
 
 @Module({
-  imports: [AuthModule],
+  imports: [AuthModule, FridgeHistoryModule],
   controllers: [FridgeController, FridgeV2Controller],
   providers: [
     FridgeService,

@@ -6,6 +6,6 @@ import { FridgeHistoryService } from 'src/api/fridge-history/fridge-history.serv
   imports: [],
   controllers: [],
   providers: [FridgeHistoryService, FridgeHistoryRepository],
-  exports: [],
+  exports: [FridgeHistoryService],
 })
 export class FridgeHistoryModule {}

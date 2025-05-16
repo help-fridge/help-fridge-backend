@@ -178,6 +178,7 @@ export class FridgeV2Repository {
         storageIdx: input.storage,
         unitIdx: input.unitIdx,
         expiredAt: input.expiredAt,
+        amount: input.amount,
       },
     });
   }
