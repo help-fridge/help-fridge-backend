@@ -31,12 +31,12 @@ export class RecipeRepository {
     const query = `
       SELECT 
         r.name AS "recipeName",
-        rf.recipe_id AS "recipeId",
-        COUNT(DISTINCT f.food_id) AS "nearExpiringCount",
-        COUNT(DISTINCT fa.food_id) AS "totalOwnedCount",
-        COUNT(DISTINCT rf.food_id) AS "totalIngredientCount",
-        ROUND(100.0 * COUNT(DISTINCT f.food_id) / COUNT(DISTINCT rf.food_id), 1) AS "nearExpiringRatio",
-        ROUND(100.0 * COUNT(DISTINCT fa.food_id) / COUNT(DISTINCT rf.food_id), 1) AS "totalOwnedRatio"
+        rf.recipe_idx AS "recipeIdx",
+        COUNT(DISTINCT f.food_idx) AS "nearExpiringCount",
+        COUNT(DISTINCT fa.food_idx) AS "totalOwnedCount",
+        COUNT(DISTINCT rf.food_idx) AS "totalIngredientCount",
+        ROUND(100.0 * COUNT(DISTINCT f.food_idx) / COUNT(DISTINCT rf.food_idx), 1) AS "nearExpiringRatio",
+        ROUND(100.0 * COUNT(DISTINCT fa.food_idx) / COUNT(DISTINCT rf.food_idx), 1) AS "totalOwnedRatio"
       FROM
         recipe_food_tb rf
       LEFT JOIN (
@@ -53,20 +53,20 @@ export class RecipeRepository {
           user_idx = ${userIdx}
       ) f
       ON
-        rf.food_id = f.food_id
+        rf.food_idx = f.food_idx
       LEFT JOIN
         fridge_tb fa
       ON
-        rf.food_id = fa.food_id
+        rf.food_idx = fa.food_idx
       AND fa.user_idx = ${userIdx}
       JOIN
         recipe_tb r
       ON
-        rf.recipe_id = r.id
+        rf.recipe_idx = r.idx
       GROUP BY
-        rf.recipe_id, r.name
+        rf.recipe_idx, r.name
       HAVING
-        COUNT(DISTINCT f.food_id) > 0
+        COUNT(DISTINCT f.food_idx) > 0
       ${orderBySort}
       LIMIT
         20;

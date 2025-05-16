@@ -24,6 +24,7 @@ model Food {
   foodUnit      FoodUnit[]
   fridgeHistory FridgeHistory[]
   fridge        Fridge[]
+  recipeFood  RecipeFood[]
 
   @@map("food_tb")
 }
@@ -76,7 +77,7 @@ model Unit {
   idx           Int             @id @default(autoincrement())
   name          String          @db.VarChar
   foodUnit      FoodUnit[]
-  FridgeHistory FridgeHistory[]
+  fridgeHistory FridgeHistory[]
   fridge        Fridge[]
 
   @@map("unit_tb")
@@ -86,7 +87,7 @@ model User {
   idx           Int             @id @default(autoincrement())
   nickname      String          @db.VarChar
   createdAt     DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
-  FridgeHistory FridgeHistory[]
+  fridgeHistory FridgeHistory[]
   fridge        Fridge[]
   localAccount  LocalAccount?
 
@@ -112,7 +113,26 @@ model FridgeHistory {
 model HistoryReason {
   idx           Int             @id @default(autoincrement())
   name          String          @db.VarChar
-  FridgeHistory FridgeHistory[]
+  fridgeHistory FridgeHistory[]
 
   @@map("history_reason_tb")
+}
+
+model RecipeFood {
+  recipeIdx Int      @map("recipe_idx")
+  foodIdx   Int      @map("food_idx")
+  food    Food     @relation(fields: [foodIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_food_tb_to_recipe_food_tb")
+  recipe  Recipe @relation(fields: [recipeIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_recipe_tb_to_recipe_food_tb")
+
+  @@id([recipeIdx, foodIdx])
+  @@map("recipe_food_tb")
+}
+
+model Recipe {
+  id           Int
+  name         String         @db.VarChar
+  idx          Int            @id
+  recipeFood RecipeFood[]
+
+  @@map("recipe_tb")
 }

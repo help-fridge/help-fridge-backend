@@ -67,6 +67,21 @@ CREATE TABLE local_account_tb
   PRIMARY KEY (idx)
 );
 
+CREATE TABLE recipe_food_tb
+(
+  recipe_idx int NOT NULL,
+  food_idx   int NOT NULL,
+  PRIMARY KEY (recipe_idx, food_idx)
+);
+
+CREATE TABLE recipe_tb
+(
+  id   int     NOT NULL,
+  name varchar NOT NULL,
+  idx  int     NOT NULL,
+  PRIMARY KEY (idx)
+);
+
 CREATE TABLE storage_tb
 (
   idx  int     NOT NULL GENERATED ALWAYS AS IDENTITY,
@@ -148,6 +163,16 @@ ALTER TABLE fridge_history_tb
   ADD CONSTRAINT FK_history_reason_tb_TO_fridge_history_tb
     FOREIGN KEY (reason_idx)
     REFERENCES history_reason_tb (idx);
+
+ALTER TABLE recipe_food_tb
+  ADD CONSTRAINT FK_recipe_tb_TO_recipe_food_tb
+    FOREIGN KEY (recipe_idx)
+    REFERENCES recipe_tb (idx);
+
+ALTER TABLE recipe_food_tb
+  ADD CONSTRAINT FK_food_tb_TO_recipe_food_tb
+    FOREIGN KEY (food_idx)
+    REFERENCES food_tb (idx);
 
 -- USER seed
 INSERT INTO user_tb (nickname) VALUES 
