@@ -40,6 +40,25 @@ CREATE TABLE fridge_tb
   PRIMARY KEY (idx)
 );
 
+CREATE TABLE fridge_history_tb
+(
+  idx        int                      NOT NULL GENERATED ALWAYS AS IDENTITY,
+  user_idx   int                      NOT NULL,
+  food_idx   int                      NOT NULL,
+  unit_idx   int                      NOT NULL,
+  reason_idx int                      NOT NULL,
+  amount     int                      NOT NULL,
+  created_at timestamp with time zone NOT NULL DEFAULT NOW(),
+  PRIMARY KEY (idx)
+);
+
+CREATE TABLE history_reason_tb
+(
+  idx  int     NOT NULL GENERATED ALWAYS AS IDENTITY,
+  name varchar NOT NULL,
+  PRIMARY KEY (idx)
+);
+
 CREATE TABLE local_account_tb
 (
   idx int     NOT NULL,
@@ -110,6 +129,26 @@ ALTER TABLE local_account_tb
     FOREIGN KEY (idx)
     REFERENCES user_tb (idx);
 
+ALTER TABLE fridge_history_tb
+  ADD CONSTRAINT FK_user_tb_TO_fridge_history_tb
+    FOREIGN KEY (user_idx)
+    REFERENCES user_tb (idx);
+
+ALTER TABLE fridge_history_tb
+  ADD CONSTRAINT FK_food_tb_TO_fridge_history_tb
+    FOREIGN KEY (food_idx)
+    REFERENCES food_tb (idx);
+
+ALTER TABLE fridge_history_tb
+  ADD CONSTRAINT FK_unit_tb_TO_fridge_history_tb
+    FOREIGN KEY (unit_idx)
+    REFERENCES unit_tb (idx);
+
+ALTER TABLE fridge_history_tb
+  ADD CONSTRAINT FK_history_reason_tb_TO_fridge_history_tb
+    FOREIGN KEY (reason_idx)
+    REFERENCES history_reason_tb (idx);
+
 -- USER seed
 INSERT INTO user_tb (nickname) VALUES 
 ('user1'); -- 1
@@ -117,6 +156,11 @@ INSERT INTO user_tb (nickname) VALUES
 -- LOCAL ACCOUNT seed
 INSERT INTO local_account_tb (idx, id, pw) VALUES 
 (1, 'guest1234', '$2b$10$02Dvy3Oh5uo7OqJM0NgNou76PQLUqL2rkUj5FTOKZ7d8YmB8so9fa');
+
+-- HISTORY REASON seed
+INSERT INTO history_reason_tb (name) VALUES
+('폐기'),
+('섭취');
 
 INSERT INTO storage_tb (name) VALUES
 ('냉장'),
