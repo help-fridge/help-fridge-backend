@@ -175,9 +175,7 @@ export class FridgeV2Repository {
     await this.prisma.fridge.update({
       where: { idx },
       data: {
-        foodIdx: input.foodIdx,
         storageIdx: input.storage,
-        amount: input.amount,
         unitIdx: input.unitIdx,
         expiredAt: input.expiredAt,
       },
