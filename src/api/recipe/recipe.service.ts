@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { RecipeRepository } from './recipe.repository';
-import { RECIPE_URL } from './common/constants/recipe-link.constant';
-import { SelectRecipeMatchStats } from './type/select-recipe-match-stats.type';
+import { RecommendRecipeEntity } from './entity/recommend-recipe.entity';
 
 @Injectable()
 export class RecipeService {
@@ -13,20 +12,12 @@ export class RecipeService {
   async recommendRecipeByExpiringOrOwned(
     userIdx: number,
     sort: string,
-  ): Promise<SelectRecipeMatchStats[]> {
+  ): Promise<RecommendRecipeEntity[]> {
     const queryResult = await this.recipeRepository.selectRecipeMatchStats(
       userIdx,
       sort,
     );
 
-    return queryResult.map((row: any) => ({
-      ...row,
-      nearExpiringCount: Number(row.nearExpiringCount),
-      totalOwnedCount: Number(row.totalOwnedCount),
-      totalIngredientCount: Number(row.totalIngredientCount),
-      nearExpiringRatio: row.nearExpiringRatio + '%',
-      totalOwnedRatio: row.totalOwnedRatio + '%',
-      recipeUrl: RECIPE_URL + row.recipeId,
-    }));
+    return queryResult.map((row) => RecommendRecipeEntity.fromRaw(row));
   }
 }

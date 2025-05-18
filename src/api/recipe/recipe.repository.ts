@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/common/module/prisma.service';
 import { RecipeSort } from './common/enums/recipe-sort.enum';
+import { RecommendRecipe } from './interfaces/recommend-recipe.interface';
 
 @Injectable()
 export class RecipeRepository {
@@ -12,17 +13,7 @@ export class RecipeRepository {
   async selectRecipeMatchStats(
     userIdx: number,
     sort: string,
-  ): Promise<
-    {
-      recipeName: string;
-      recipeId: string;
-      nearExpiringCount: number;
-      totalOwnedCount: number;
-      totalIngredientCount: number;
-      nearExpiringRatio: number;
-      totalOwnedRatio: number;
-    }[]
-  > {
+  ): Promise<RecommendRecipe[]> {
     const orderBySort =
       sort === RecipeSort.NEAR_EXPIRING
         ? `ORDER BY "nearExpiringCount" DESC, "nearExpiringRatio" DESC`
@@ -30,8 +21,21 @@ export class RecipeRepository {
 
     const query = `
       SELECT 
-        r.name AS "recipeName",
-        rf.recipe_idx AS "recipeIdx",
+        JSON_BUILD_OBJECT(
+          'idx', r.idx,
+          'id', r.id,
+          'name', r.name,
+          'ingredient', JSON_AGG(
+            JSON_BUILD_OBJECT(
+              'idx', food.idx,
+              'name', food.name,
+              'category', JSON_BUILD_OBJECT(
+                'idx', fc.idx,
+                'name', fc.name
+              )
+            )
+          )
+        ) AS recipe,
         COUNT(DISTINCT f.food_idx) AS "nearExpiringCount",
         COUNT(DISTINCT fa.food_idx) AS "totalOwnedCount",
         COUNT(DISTINCT rf.food_idx) AS "totalIngredientCount",
@@ -41,16 +45,21 @@ export class RecipeRepository {
         recipe_food_tb rf
       LEFT JOIN (
         SELECT
-          *
+          f_inner.*
         FROM
-          fridge_tb
+          fridge_tb f_inner
+        JOIN
+          food_tb ft ON f_inner.food_idx = ft.idx
         WHERE
-          expired_at <= (
-            DATE_TRUNC('day', NOW() AT TIME ZONE 'Asia/Seoul') AT TIME ZONE 'Asia/Seoul' 
+          COALESCE(
+            f_inner.expired_at,
+            f_inner.created_at + (ft.expiration || ' days')::INTERVAL
+          ) <= (
+            DATE_TRUNC('day', NOW() AT TIME ZONE 'Asia/Seoul') AT TIME ZONE 'Asia/Seoul'
             + INTERVAL '3 days'
           )
         AND
-          user_idx = ${userIdx}
+          f_inner.user_idx = ${userIdx}
       ) f
       ON
         rf.food_idx = f.food_idx
@@ -60,11 +69,19 @@ export class RecipeRepository {
         rf.food_idx = fa.food_idx
       AND fa.user_idx = ${userIdx}
       JOIN
+        food_tb food
+      ON
+        rf.food_idx = food.idx  
+      JOIN
+        food_category_tb fc
+      ON
+        food.category_idx = fc.idx
+      JOIN
         recipe_tb r
       ON
         rf.recipe_idx = r.idx
       GROUP BY
-        rf.recipe_idx, r.name
+        r.idx, r.id, r.name
       HAVING
         COUNT(DISTINCT f.food_idx) > 0
       ${orderBySort}

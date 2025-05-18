@@ -5,6 +5,8 @@ import { Sort } from './common/decorators/recipe-sort.decorator';
 import { SelectRecipeMatchStats } from './type/select-recipe-match-stats.type';
 import { ApiQuery } from '@nestjs/swagger';
 import { AuthGuard } from 'src/api/auth/common/guards/auth.guard';
+import { RecommendRecipe } from './interfaces/recommend-recipe.interface';
+import { RecommendRecipeEntity } from './entity/recommend-recipe.entity';
 
 @Controller('recipe')
 export class RecipeController {
@@ -24,7 +26,7 @@ export class RecipeController {
   async recommendRecipeByExpiringOrOwned(
     @User('idx') userIdx: number,
     @Sort() sort: string,
-  ): Promise<SelectRecipeMatchStats[]> {
+  ): Promise<RecommendRecipeEntity[]> {
     return await this.recipeService.recommendRecipeByExpiringOrOwned(
       userIdx,
       sort,

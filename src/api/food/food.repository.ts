@@ -44,6 +44,9 @@ export class FoodRepository {
         name: {
           contains: input.name,
         },
+        foodUnit: {
+          some: {},
+        },
       },
       select: {
         idx: true,

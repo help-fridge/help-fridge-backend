@@ -1,5 +1,4 @@
-import { FoodEntity } from 'src/api/food/entity/food.entity';
-import { SelectRecipeField } from './prisma/select-recipe.field';
+import { IngredientEntity } from './Ingredient.entity';
 
 export class RecipeEntity {
   idx: number;
@@ -8,18 +7,9 @@ export class RecipeEntity {
 
   name: string;
 
-  food: FoodEntity[];
+  ingredient: IngredientEntity[];
 
   constructor(data: RecipeEntity) {
     Object.assign(this, data);
-  }
-
-  static from(recipe: SelectRecipeField): RecipeEntity {
-    return new RecipeEntity({
-      idx: recipe.idx,
-      id: recipe.id,
-      name: recipe.name,
-      food: recipe.recipeFood.map(({ food }) => FoodEntity.from(food)),
-    });
   }
 }

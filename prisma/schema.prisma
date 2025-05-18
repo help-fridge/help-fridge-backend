@@ -24,7 +24,7 @@ model Food {
   foodUnit      FoodUnit[]
   fridgeHistory FridgeHistory[]
   fridge        Fridge[]
-  recipeFood  RecipeFood[]
+  recipeFood    RecipeFood[]
 
   @@map("food_tb")
 }
@@ -119,19 +119,19 @@ model HistoryReason {
 }
 
 model RecipeFood {
-  recipeIdx Int      @map("recipe_idx")
-  foodIdx   Int      @map("food_idx")
-  food    Food     @relation(fields: [foodIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_food_tb_to_recipe_food_tb")
-  recipe  Recipe @relation(fields: [recipeIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_recipe_tb_to_recipe_food_tb")
+  recipeIdx Int    @map("recipe_idx")
+  foodIdx   Int    @map("food_idx")
+  food      Food   @relation(fields: [foodIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_food_tb_to_recipe_food_tb")
+  recipe    Recipe @relation(fields: [recipeIdx], references: [idx], onDelete: NoAction, onUpdate: NoAction, map: "fk_recipe_tb_to_recipe_food_tb")
 
   @@id([recipeIdx, foodIdx])
   @@map("recipe_food_tb")
 }
 
 model Recipe {
-  id           Int
-  name         String         @db.VarChar
-  idx          Int            @id
+  idx        Int          @id @default(autoincrement())
+  id         Int
+  name       String       @db.VarChar
   recipeFood RecipeFood[]
 
   @@map("recipe_tb")
