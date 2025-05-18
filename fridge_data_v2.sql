@@ -57172,16 +57172,6 @@ COPY public.recipe_food_tb (recipe_idx, food_idx) FROM stdin;
 6952	1726
 \.
 
---
--- Data for Name: storage_tb; Type: TABLE DATA; Schema: public; Owner: -
---
-
-COPY public.storage_tb (name) FROM stdin;
-냉장
-냉동
-서랍
-\.
-
 
 --
 -- Data for Name: fridge_tb; Type: TABLE DATA; Schema: public; Owner: -
@@ -57229,13 +57219,6 @@ SELECT pg_catalog.setval('public.recipe_tb_idx_seq', 6954, true);
 --
 
 SELECT pg_catalog.setval('public.unit_tb_idx_seq', 3, true);
-
-
---
--- Name: storage_tb_idx_seq1; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-SELECT pg_catalog.setval('public.storage_tb_idx_seq', 3, true);
 
 
 --
