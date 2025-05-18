@@ -18,7 +18,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "dev:infra:up": "docker compose up -d",
+    "dev:infra:up": "docker compose up -d && sleep 2&& docker cp ./fridge_data_v2.sql help-fridge-postgres:/fridge_data_v2.sql && docker exec -i help-fridge-postgres psql -U help_fridge_admin -d help_fridge -f /fridge_data_v2.sql",
     "dev:infra:down": "docker compose down -v",
     "dev:infra:connect": "docker exec -it help-fridge-postgres psql -d help_fridge -U help_fridge_admin"
   },
