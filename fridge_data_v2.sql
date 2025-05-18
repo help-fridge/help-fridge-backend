@@ -89,7 +89,7 @@ COPY public.food_category_tb (idx, name) FROM stdin;
 -- Data for Name: food_tb; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.food_tb (idx, category_idx, name, expiration) FROM stdin;
+COPY public.food_tb (idx, category_idx, name, expiration, chosung) FROM stdin;
 1	1	율무밥	1
 2	1	자장밥	1
 3	1	잡곡밥	1

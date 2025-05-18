@@ -41,9 +41,11 @@ export class FoodRepository {
   ): Promise<SelectFoodField[]> {
     return await this.prisma.food.findMany({
       where: {
-        name: {
-          contains: input.name,
-        },
+        name: input.name
+          ? {
+              contains: input.name,
+            }
+          : undefined,
         foodUnit: {
           some: {},
         },
@@ -69,6 +71,7 @@ export class FoodRepository {
           },
         },
       },
+      take: input.name ? 10 : undefined,
       orderBy: {
         idx: 'desc',
       },

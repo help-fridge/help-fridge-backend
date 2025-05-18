@@ -17,6 +17,7 @@ CREATE TABLE food_tb
   category_idx int     NOT NULL,
   name         varchar NOT NULL,
   expiration   int     NOT NULL,
+  chosung      varchar NOT NULL,
   PRIMARY KEY (idx)
 );
 
