@@ -35,18 +35,17 @@
       "V3ppNu6Y0drBXBFZXoqXn",
       "L8LuoZqCky_u0Kij7x7dU",
       "q7Cs5sOWV-_eu_01stAVs",
-      "zF2jMrfiAxNlS40X6j5w1",
       "LQ-iWr2YyUGooszG3JnzU",
       "4xc9hxQVKKksD2D7nym7R",
       "zIxoIiPhMzts52kjHaxOF",
       "yYkJTTxCQJNHSVdHK2uZv",
       "nxfmM4a_D9hCMu7rgXihE",
       "qcnYypWa7ytkQH7hJ_pU3",
-      "VwrBjVPMbbgxSiigr5ID6"
+      "VwrBjVPMbbgxSiigr5ID6",
+      "zF2jMrfiAxNlS40X6j5w1"
     ],
     "relationshipIds": [
       "7v8zUFHgYn5YK6QLi-NAD",
-      "KMmZcYPHVXclDyBa_DSQz",
       "EN10xsrQ61PsMQt6q1PPE",
       "jDewP2_5Nuv0GosIc2XRK",
       "ket2pEK_x6kOgEftx32mE",
@@ -58,7 +57,8 @@
       "MFbrttuzoH9KsFre-w6X7",
       "uT9jv733glI1kiqOwhbuG",
       "t10nwtpWnMlTJRhuTrBxV",
-      "e-4lgb1sWDgRvAMYgogkW"
+      "e-4lgb1sWDgRvAMYgogkW",
+      "KMmZcYPHVXclDyBa_DSQz"
     ],
     "indexIds": [],
     "memoIds": []
@@ -516,7 +516,7 @@
           "color": "#2196F3"
         },
         "meta": {
-          "updateAt": 1747321528736,
+          "updateAt": 1747561951532,
           "createAt": 1747320117043
         }
       },
@@ -558,7 +558,6 @@
           "FfySWfi_KRjcigamdr8yF",
           "EyO0VEF1rDxaSomjsTWoC",
           "QpMST_ZW4Z-lhT-QEn2ZM",
-          "hFjJWkRMyyZrjklJ_Wpd1",
           "xsCFkf--07OGWerQ4kWm7",
           "WChjdmtINg0s4wGlK5wJN",
           "Jf8q6zjF3Wn0lfA5ExQxJ"
@@ -588,7 +587,7 @@
           "color": "#673AB7"
         },
         "meta": {
-          "updateAt": 1747559708259,
+          "updateAt": 1747562344850,
           "createAt": 1747320165733
         }
       },
@@ -642,7 +641,7 @@
           "color": "#FF5722"
         },
         "meta": {
-          "updateAt": 1747321560372,
+          "updateAt": 1747561950093,
           "createAt": 1747320290760
         }
       },
@@ -667,7 +666,7 @@
           "color": "#009688"
         },
         "meta": {
-          "updateAt": 1747398010233,
+          "updateAt": 1747561932169,
           "createAt": 1747320312568
         }
       },
@@ -774,7 +773,7 @@
           "color": "#FF5722"
         },
         "meta": {
-          "updateAt": 1747322050410,
+          "updateAt": 1747561684339,
           "createAt": 1747320461222
         }
       },
@@ -850,14 +849,14 @@
         ],
         "ui": {
           "x": 1616.7132,
-          "y": 2432.0678,
+          "y": 2436.0678,
           "zIndex": 723,
           "widthName": 99,
           "widthComment": 140,
           "color": "#795548"
         },
         "meta": {
-          "updateAt": 1747389613069,
+          "updateAt": 1747562729356,
           "createAt": 1747384434853
         }
       },
@@ -3694,11 +3693,11 @@
       "hFjJWkRMyyZrjklJ_Wpd1": {
         "id": "hFjJWkRMyyZrjklJ_Wpd1",
         "tableId": "V3ppNu6Y0drBXBFZXoqXn",
-        "name": "chosung",
-        "comment": "ㄹㅁ",
+        "name": "choseong",
+        "comment": "",
         "dataType": "varchar",
         "default": "",
-        "options": 8,
+        "options": 0,
         "ui": {
           "keys": 0,
           "widthName": 60,
@@ -3707,7 +3706,7 @@
           "widthDefault": 60
         },
         "meta": {
-          "updateAt": 1747559714658,
+          "updateAt": 1747562013841,
           "createAt": 1747559707118
         }
       }
@@ -4181,7 +4180,7 @@
             "UTfQb-0TstVx59BIp3P9k"
           ],
           "x": 2201.9471,
-          "y": 2325.5495,
+          "y": 2313.5495,
           "direction": 1
         },
         "meta": {
@@ -4237,7 +4236,7 @@
             "FfySWfi_KRjcigamdr8yF"
           ],
           "x": 2458.4471,
-          "y": 2461.5495,
+          "y": 2437.5495,
           "direction": 8
         },
         "meta": {
@@ -4265,7 +4264,7 @@
             "EyO0VEF1rDxaSomjsTWoC"
           ],
           "x": 2714.9471,
-          "y": 2325.5495,
+          "y": 2313.5495,
           "direction": 2
         },
         "meta": {
@@ -4405,7 +4404,7 @@
             "Pe4s-tuMbyBu8IfqEqpSy"
           ],
           "x": 1871.2132,
-          "y": 2432.0678,
+          "y": 2436.0678,
           "direction": 4
         },
         "meta": {
@@ -4433,7 +4432,7 @@
             "GmvbUseVAJjEsQkQjtjBX"
           ],
           "x": 2125.7132,
-          "y": 2600.0678,
+          "y": 2604.0678,
           "direction": 2
         },
         "meta": {
@@ -4461,7 +4460,7 @@
             "69vcNUImwZIYNFEMahAnH"
           ],
           "x": 2125.7132,
-          "y": 2488.0678,
+          "y": 2492.0678,
           "direction": 2
         },
         "meta": {
@@ -4489,7 +4488,7 @@
             "ow1ozq1ww1SoTTuxKIcXz"
           ],
           "x": 1616.7132,
-          "y": 2544.0678,
+          "y": 2548.0678,
           "direction": 1
         },
         "meta": {
