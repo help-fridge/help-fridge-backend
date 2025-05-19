@@ -48,4 +48,12 @@ export class AuthController {
 
     return res.redirect(mainPageUrl);
   }
+
+  @Post('/logout')
+  logout(@Res() res: Response): void {
+    res.clearCookie('accessToken');
+    res.clearCookie('refreshToken');
+
+    return;
+  }
 }

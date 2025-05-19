@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { RecipeService } from './recipe.service';
 import { User } from 'src/common/decorator/user.decorator';
 import { Sort } from './common/decorators/recipe-sort.decorator';
@@ -7,6 +7,7 @@ import { ApiQuery } from '@nestjs/swagger';
 import { AuthGuard } from 'src/api/auth/common/guards/auth.guard';
 import { RecommendRecipe } from './interfaces/recommend-recipe.interface';
 import { RecommendRecipeEntity } from './entity/recommend-recipe.entity';
+import { GetRecommendRecipeAllDto } from './dto/get-recommend-recipe-all.dto';
 
 @Controller('recipe')
 export class RecipeController {
@@ -17,19 +18,13 @@ export class RecipeController {
    */
   @UseGuards(AuthGuard)
   @Get('/recommend')
-  @ApiQuery({
-    name: 'sort',
-    example: 'near_expiring',
-    description:
-      '레시피 추천 기준\n- near_expiring: 소비기한 임박 재료 기반 ("버리기 싫어요" API)\n- total_owned: 보유 재료 개수 기반 ("나가기 귀찮아요" API)',
-  })
   async recommendRecipeByExpiringOrOwned(
+    @Query() dto: GetRecommendRecipeAllDto,
     @User('idx') userIdx: number,
-    @Sort() sort: string,
   ): Promise<RecommendRecipeEntity[]> {
-    return await this.recipeService.recommendRecipeByExpiringOrOwned(
+    return await this.recipeService.recommendRecipeByExpiringOrOwned({
+      ...dto,
       userIdx,
-      sort,
-    );
+    });
   }
 }

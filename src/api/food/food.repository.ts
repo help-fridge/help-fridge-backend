@@ -39,43 +39,87 @@ export class FoodRepository {
   public async selectFoodAll(
     input: GetFoodAllInput,
   ): Promise<SelectFoodField[]> {
-    return await this.prisma.food.findMany({
-      where: {
-        name: input.name
-          ? {
-              contains: input.name,
-            }
-          : undefined,
-        foodUnit: {
-          some: {},
-        },
-      },
-      select: {
-        idx: true,
-        name: true,
-        expiration: true,
-        foodUnit: {
-          select: {
-            unit: {
-              select: {
-                idx: true,
-                name: true,
-              },
-            },
-          },
-        },
-        foodCategory: {
-          select: {
-            idx: true,
-            name: true,
-          },
-        },
-      },
-      take: input.name ? 10 : undefined,
-      orderBy: {
-        idx: 'desc',
-      },
-    });
+    return await this.prisma.$queryRawUnsafe<SelectFoodField[]>(`
+      SELECT
+        f.idx,
+        f.name,
+        f.expiration,
+        JSONB_BUILD_OBJECT(
+          'idx', fc.idx,
+          'name', fc.name
+        ) AS "foodCategory",
+        jsonb_agg(
+          JSONB_BUILD_OBJECT(
+            'unit', JSONB_BUILD_OBJECT(
+              'idx', u.idx,
+              'name', u.name
+            )
+          )
+        ) FILTER (WHERE u.idx IS NOT NULL) AS "foodUnit"
+      FROM
+        food_tb f
+      LEFT JOIN
+        food_category_tb fc
+      ON
+        f.category_idx = fc.idx
+      LEFT JOIN
+        food_unit_tb fu
+      ON
+        f.idx = fu.food_idx
+      LEFT JOIN
+        unit_tb u
+      ON
+        fu.unit_idx = u.idx
+      ${input.name ? `WHERE f.name ILIKE '%' || $1 || '%'` : ''}
+      GROUP BY
+        f.idx,
+        f.name,
+        f.expiration,
+        fc.idx,
+        fc.name
+      ORDER BY LENGTH(f.name) ASC, f.name ASC
+      ${input.name ? '' : 'LIMIT 10'};
+    `, ...(input.name ? [input.name] : []));
+
+
+
+    // return await this.prisma.food.findMany({
+    //   where: {
+    //     name: input.name
+    //       ? {
+    //           contains: input.name,
+    //         }
+    //       : undefined,
+    //     foodUnit: {
+    //       some: {},
+    //     },
+    //   },
+    //   select: {
+    //     idx: true,
+    //     name: true,
+    //     expiration: true,
+    //     foodUnit: {
+    //       select: {
+    //         unit: {
+    //           select: {
+    //             idx: true,
+    //             name: true,
+    //           },
+    //         },
+    //       },
+    //     },
+    //     foodCategory: {
+    //       select: {
+    //         idx: true,
+    //         name: true,
+    //       },
+    //     },
+    //   },
+    //   take: input.name ? undefined : 10,
+    //   orderBy: {
+    //     idx: 'desc',
+    //   },
+    // });
   }
 
   public async insertFood(input: CreateFoodInput): Promise<SelectFoodField> {

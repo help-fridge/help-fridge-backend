@@ -9,6 +9,7 @@ import { GetFoodAllInput } from 'src/api/food/input/get-food-all.input';
 export class FoodService {
   constructor(private readonly foodRepository: FoodRepository) {}
 
+  /** */
   async getFoodByIdx(idx: number): Promise<FoodEntity | null> {
     const food = await this.foodRepository.selectFoodByIdx(idx);
 
@@ -17,6 +18,7 @@ export class FoodService {
 
   async getFoodAll(input: GetFoodAllInput): Promise<FoodEntity[]> {
     const foods = await this.foodRepository.selectFoodAll(input);
+    console.log(foods)
 
     return foods.map((food) => FoodEntity.from(food));
   }

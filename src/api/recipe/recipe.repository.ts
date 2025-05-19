@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/common/module/prisma.service';
 import { RecipeSort } from './common/enums/recipe-sort.enum';
 import { RecommendRecipe } from './interfaces/recommend-recipe.interface';
+import { GetRecommendRecipeAllInput } from './input/get-recommend-recipe-all.input';
+import { recommendType } from './common/constants/recommend-type.constant';
 
 @Injectable()
 export class RecipeRepository {
@@ -11,13 +13,13 @@ export class RecipeRepository {
    * 소비기한 임박한 것 기준으로 레시피 추천
    */
   async selectRecipeMatchStats(
-    userIdx: number,
-    sort: string,
+    input: GetRecommendRecipeAllInput
   ): Promise<RecommendRecipe[]> {
     const orderBySort =
-      sort === RecipeSort.NEAR_EXPIRING
+      input.type === recommendType.NEAR
         ? `ORDER BY "nearExpiringCount" DESC, "nearExpiringRatio" DESC`
         : `ORDER BY "totalOwnedRatio" DESC, "nearExpiringRatio" DESC, "totalOwnedCount" DESC`;
+    const userIdx = input.userIdx;
 
     const query = `
       SELECT 
