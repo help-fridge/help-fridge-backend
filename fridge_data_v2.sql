@@ -3433,12 +3433,6 @@ COPY public.food_unit_tb (food_idx, unit_idx) FROM stdin;
 1256	3
 1257	3
 1258	3
-1259	2
-1260	2
-1261	2
-1262	2
-1263	2
-1264	2
 1265	1
 1266	1
 1267	1
@@ -3448,19 +3442,6 @@ COPY public.food_unit_tb (food_idx, unit_idx) FROM stdin;
 1271	1
 1272	1
 1273	1
-1274	2
-1275	2
-1276	2
-1277	2
-1278	2
-1279	2
-1280	2
-1281	2
-1282	2
-1283	2
-1284	2
-1285	2
-1286	2
 1287	2
 1288	2
 1289	2
@@ -3476,14 +3457,6 @@ COPY public.food_unit_tb (food_idx, unit_idx) FROM stdin;
 1299	3
 1300	2
 1301	2
-1302	1
-1303	1
-1304	1
-1305	1
-1306	1
-1307	1
-1308	1
-1309	1
 1310	2
 1311	2
 1312	2
@@ -3521,32 +3494,28 @@ COPY public.food_unit_tb (food_idx, unit_idx) FROM stdin;
 1344	1
 1345	1
 1346	1
-1347	1
 1348	1
 1349	1
-1350	1
-1351	1
 1352	1
 1353	1
-1354	1
-1355	1
-1356	1
-1357	1
+1302	2
+1303	2
+1304	2
+1305	2
+1306	2
+1307	2
+1308	2
+1309	2
+1347	3
+1350	3
+1351	3
+1354	3
+1355	3
+1356	3
 1358	3
-1359	2
-1360	2
 1361	2
 1362	2
-1363	1
-1364	1
-1365	1
-1366	1
-1367	1
-1368	1
 1369	1
-1370	1
-1371	1
-1372	1
 1373	1
 1374	1
 1375	1
@@ -3560,16 +3529,13 @@ COPY public.food_unit_tb (food_idx, unit_idx) FROM stdin;
 1383	3
 1384	3
 1385	3
-1386	2
 1387	3
 1388	3
 1389	3
-1390	2
 1391	2
 1392	3
 1393	3
 1394	2
-1395	2
 1396	2
 1397	3
 1398	3
@@ -3840,12 +3806,9 @@ COPY public.food_unit_tb (food_idx, unit_idx) FROM stdin;
 1663	2
 1664	2
 1665	2
-1666	2
 1667	2
 1668	2
 1669	2
-1670	2
-1671	2
 1672	2
 1673	2
 1674	2
@@ -3853,18 +3816,14 @@ COPY public.food_unit_tb (food_idx, unit_idx) FROM stdin;
 1676	2
 1677	2
 1678	2
-1679	2
 1680	2
 1681	2
 1682	2
 1683	2
-1684	2
-1685	2
 1686	2
 1687	2
 1688	2
 1689	2
-1690	2
 1691	2
 1692	3
 1693	3
@@ -3983,6 +3942,7 @@ COPY public.food_unit_tb (food_idx, unit_idx) FROM stdin;
 1806	2
 1807	2
 1808	2
+1670	3
 1809	2
 1810	2
 1811	2
@@ -3991,9 +3951,6 @@ COPY public.food_unit_tb (food_idx, unit_idx) FROM stdin;
 1814	2
 1815	2
 1816	2
-1817	2
-1818	2
-1819	2
 1820	2
 1821	2
 1822	2
@@ -4008,7 +3965,6 @@ COPY public.food_unit_tb (food_idx, unit_idx) FROM stdin;
 1831	2
 1832	2
 1833	2
-1834	2
 1835	2
 1836	2
 1837	2
@@ -4126,7 +4082,6 @@ COPY public.food_unit_tb (food_idx, unit_idx) FROM stdin;
 1949	2
 1950	2
 1951	2
-1952	2
 1953	2
 1954	2
 1955	2
@@ -4209,6 +4164,7 @@ COPY public.food_unit_tb (food_idx, unit_idx) FROM stdin;
 2032	2
 2033	3
 2034	2
+1817	3
 2035	2
 2036	2
 2037	2
@@ -4241,7 +4197,140 @@ COPY public.food_unit_tb (food_idx, unit_idx) FROM stdin;
 2064	2
 2065	2
 2066	2
+1259	1
+1260	1
+1261	1
+1262	1
+1263	1
+1264	1
+1274	1
+1275	1
+1276	1
+1277	1
+1278	1
+1279	1
+1280	1
+1281	1
+1282	1
+1283	1
+1284	1
+1285	1
+1286	1
+1666	1
+1952	1
+1357	3
+1359	3
+1360	3
+1363	3
+1364	3
+1365	3
+1366	3
+1367	3
+1368	3
+1370	3
+1371	3
+1372	3
+1386	3
+1390	3
+1395	3
+1671	3
+1679	3
+1684	3
+1685	3
+1690	3
+1818	3
+1819	3
+1834	3
+88	1
+89	1
+90	1
+675	1
+1706	1
+1707	1
+1708	1
+1718	1
+672	2
+673	2
+1208	2
+1521	2
+1522	2
+1523	2
+1524	2
+1525	2
+1526	2
+1527	2
+1528	2
+1529	2
+1712	2
+1725	2
+1703	3
+1704	3
+1742	3
+1743	3
+1744	3
+1746	3
+1747	3
+1766	3
+1767	3
+1768	3
+1769	3
+1770	3
+1771	3
+1772	3
+1778	3
+1779	3
+1780	3
+1781	3
+1782	3
+1783	3
+1792	3
+1795	3
+1800	3
+1804	3
+1805	3
+1846	3
+1847	3
+1848	3
+1849	3
+1851	3
+1853	3
+1886	3
+1888	3
+1889	3
+1896	3
+1897	3
+1941	3
+1952	3
 \.
+
+
+--
+-- Data for Name: fridge_tb; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+INSERT INTO public.fridge_tb (storage_idx, food_idx, unit_idx, user_idx, amount, expired_at) VALUES
+(1, 1952, 3, 1, 3, NULL),
+(3, 1706, 3, 1, 2, NULL),
+(3, 1941, 3, 1, 1, NULL),
+(3, 1707, 3, 1, 1, NULL),
+(3, 1712, 3, 1, 1, NULL),
+(3, 1711, 3, 1, 1, NULL),
+(1, 1383, 3, 1, 2, NULL),
+(1, 1988, 3, 1, 2, NULL),
+(1, 90,   1, 1, 2, NULL),
+(1, 1997, 2, 1, 400, NULL),
+(1, 1382, 3, 1, 2, NULL),
+(1, 621,  3, 1, 2, NULL),
+(3, 1767, 3, 1, 2, NULL),
+(1, 1817, 3, 1, 2, NOW() + INTERVAL '2 days'),
+(1, 1799, 3, 1, 1, NOW() + INTERVAL '2 days'),
+(1, 1318, 3, 1, 5, NOW() + INTERVAL '2 days'),
+(1, 1325, 3, 1, 5, NOW() + INTERVAL '3 days'),
+(2, 2001, 2, 1, 200, NOW() + INTERVAL '3 days'),
+(2, 1779, 3, 1, 2, NOW() + INTERVAL '3 days'),
+(2, 1797, 3, 1, 2, NOW() + INTERVAL '5 days'),
+(3, 1851, 3, 1, 1, NOW() + INTERVAL '5 days');
+
 
 
 --
@@ -57174,26 +57263,6 @@ COPY public.recipe_food_tb (recipe_idx, food_idx) FROM stdin;
 
 
 --
--- Data for Name: fridge_tb; Type: TABLE DATA; Schema: public; Owner: -
---
-
-COPY public.fridge_tb (storage_idx, food_idx, unit_idx, user_idx, amount, expired_at) FROM stdin NULL 'NULL';
-1	621	3	1	2	NULL
-1	1325	3	1	3	NULL
-2	1380	3	1	3	NULL
-2	1383	3	1	5	NULL
-1	1534	3	1	9	NULL
-1	1711	2	1	3	NULL
-1	1712	3	1	3	NULL
-1	1799	2	1	3	NULL
-3	1805	2	1	1	NULL
-3	1817	2	1	1	NULL
-1	1952	2	1	3	NULL
-1	1988	2	1	3	NULL
-\.
-
-
---
 -- Name: food_category_tb_idx_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
@@ -57208,6 +57277,13 @@ SELECT pg_catalog.setval('public.food_tb_idx_seq', 2066, true);
 
 
 --
+-- Name: fridge_tb_idx_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.fridge_tb_idx_seq', 33, true);
+
+
+--
 -- Name: recipe_tb_idx_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
@@ -57215,19 +57291,13 @@ SELECT pg_catalog.setval('public.recipe_tb_idx_seq', 6954, true);
 
 
 --
--- Name: unit_tb_idx_seq1; Type: SEQUENCE SET; Schema: public; Owner: -
+-- Name: unit_tb_idx_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
 SELECT pg_catalog.setval('public.unit_tb_idx_seq', 3, true);
 
 
 --
--- Name: fridge_tb_idx_seq1; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-SELECT pg_catalog.setval('public.fridge_tb_idx_seq', 12, true);
-
-
---
 -- PostgreSQL database dump complete
 --
+
