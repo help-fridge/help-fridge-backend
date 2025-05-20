@@ -50,10 +50,16 @@ export class AuthController {
   }
 
   @Post('/logout')
-  logout(@Res() res: Response): void {
+  clearTokens(@Res() res: Response): void {
     res.clearCookie('accessToken');
     res.clearCookie('refreshToken');
-
-    return;
+    res.status(200).json({ message: 'Tokens cleared' });
   }
+  // @Post('/logout')
+  // logout(@Res() res: Response): void {
+  //   res.clearCookie('accessToken');
+  //   res.clearCookie('refreshToken');
+
+  //   return;
+  // }
 }
