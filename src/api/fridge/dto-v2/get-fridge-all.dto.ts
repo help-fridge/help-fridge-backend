@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsIn } from 'class-validator';
+import { IsIn, IsOptional } from 'class-validator';
 import {
   storageType,
   StorageType,
@@ -8,5 +8,6 @@ import {
 export class GetFridgeAllDto {
   @Type(() => Number)
   @IsIn(Object.values(storageType))
+  @IsOptional()
   type?: StorageType;
 }
