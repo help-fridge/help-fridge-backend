@@ -56,10 +56,7 @@ export class RecipeRepository {
           COALESCE(
             f_inner.expired_at,
             f_inner.created_at + (ft.expiration || ' days')::INTERVAL
-          ) <= (
-            DATE_TRUNC('day', NOW() AT TIME ZONE 'Asia/Seoul') AT TIME ZONE 'Asia/Seoul'
-            + INTERVAL '3 days'
-          )
+          ) <= NOW() + INTERVAL '3 days'
         AND
           f_inner.user_idx = ${userIdx}
       ) f
