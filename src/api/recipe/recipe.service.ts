@@ -11,10 +11,10 @@ export class RecipeService {
    * 소비기한 임박한 것 기준으로 레시피 추천
    */
   async recommendRecipeByExpiringOrOwned(
-    input: GetRecommendRecipeAllInput
+    input: GetRecommendRecipeAllInput,
   ): Promise<RecommendRecipeEntity[]> {
-    const queryResult = await this.recipeRepository.selectRecipeMatchStats(input);
-
-    return queryResult.map((row) => RecommendRecipeEntity.fromRaw(row));
+    return (await this.recipeRepository.selectRecipeMatchStats(input)).map(
+      (row) => RecommendRecipeEntity.fromRaw(row),
+    );
   }
 }

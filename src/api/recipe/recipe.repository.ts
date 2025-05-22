@@ -17,9 +17,31 @@ export class RecipeRepository {
   ): Promise<RecommendRecipe[]> {
     const orderBySort =
       input.type === recommendType.NEAR
-        ? `ORDER BY "nearExpiringCount" DESC, "nearExpiringRatio" DESC`
-        : `ORDER BY "totalOwnedRatio" DESC, "nearExpiringRatio" DESC, "totalOwnedCount" DESC`;
+        ? `ORDER BY 
+             CASE 
+               WHEN COUNT(DISTINCT fa.food_idx) > 0 THEN 1
+               ELSE 0
+             END DESC,
+             "nearExpiringCount" DESC,
+             "totalOwnedCount" DESC,
+             "nearExpiringRatio" DESC,
+             "totalOwnedRatio" DESC`
+        : `ORDER BY 
+             "totalOwnedRatio" DESC,
+             "nearExpiringRatio" DESC,
+             "totalOwnedCount" DESC`;
+
     const userIdx = input.userIdx;
+
+    const havingClause =
+      input.type === recommendType.NEAR
+        ? `HAVING 
+            CASE 
+              WHEN COUNT(DISTINCT rf.food_idx) = 0 THEN 0
+              ELSE 100.0 * COUNT(DISTINCT f.food_idx) / COUNT(DISTINCT rf.food_idx)
+            END > 0`
+        : '';
+
 
     const query = `
       SELECT 
@@ -41,8 +63,16 @@ export class RecipeRepository {
         COUNT(DISTINCT f.food_idx) AS "nearExpiringCount",
         COUNT(DISTINCT fa.food_idx) AS "totalOwnedCount",
         COUNT(DISTINCT rf.food_idx) AS "totalIngredientCount",
-        ROUND(100.0 * COUNT(DISTINCT f.food_idx) / COUNT(DISTINCT rf.food_idx), 1) AS "nearExpiringRatio",
-        ROUND(100.0 * COUNT(DISTINCT fa.food_idx) / COUNT(DISTINCT rf.food_idx), 1) AS "totalOwnedRatio"
+        ROUND(
+          CASE WHEN COUNT(DISTINCT rf.food_idx) = 0 THEN 0
+               ELSE 100.0 * COUNT(DISTINCT f.food_idx) / COUNT(DISTINCT rf.food_idx)
+          END, 1
+        ) AS "nearExpiringRatio",
+        ROUND(
+          CASE WHEN COUNT(DISTINCT rf.food_idx) = 0 THEN 0
+               ELSE 100.0 * COUNT(DISTINCT fa.food_idx) / COUNT(DISTINCT rf.food_idx)
+          END, 1
+        ) AS "totalOwnedRatio"
       FROM
         recipe_food_tb rf
       LEFT JOIN (
@@ -81,13 +111,12 @@ export class RecipeRepository {
         rf.recipe_idx = r.idx
       GROUP BY
         r.idx, r.id, r.name
-      HAVING
-        COUNT(DISTINCT f.food_idx) > 0
+      ${havingClause}
       ${orderBySort}
-      LIMIT
-        20;
+      LIMIT 20;
     `;
 
+      
     return await this.prisma.$queryRawUnsafe(query);
   }
 }
