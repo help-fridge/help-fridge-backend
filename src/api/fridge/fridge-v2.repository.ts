@@ -62,56 +62,93 @@ export class FridgeV2Repository {
   public async selectFridgeByAll(
     input: GetFridgeAllInput,
   ): Promise<SelectFridgeField[]> {
-    return await this.prisma.fridge.findMany({
-      where: {
-        userIdx: input.userIdx,
-        storageIdx: input.type,
-      },
-      select: {
-        idx: true,
-        storage: true,
-        createdAt: true,
-        amount: true,
-        expiredAt: true,
-        unit: {
-          select: {
-            idx: true,
-            name: true,
-          },
-        },
-        food: {
-          select: {
-            idx: true,
-            name: true,
-            expiration: true,
-            foodUnit: {
-              select: {
-                unit: {
-                  select: {
-                    idx: true,
-                    name: true,
-                  },
-                },
-              },
-            },
-            foodCategory: {
-              select: {
-                idx: true,
-                name: true,
-              },
-            },
-          },
-        },
-        user: {
-          select: {
-            idx: true,
-          },
-        },
-      },
-      orderBy: {
-        idx: 'asc',
-      },
-    });
+    const sortType = input.sortType;
+
+    const orderByClause =
+      sortType === 1
+        ? `ORDER BY COALESCE(f.expired_at, f.created_at + (fd.expiration || ' days')::INTERVAL) ASC`
+        : sortType === 2
+          ? `ORDER BY fd.name ASC`
+          : sortType === 3
+            ? `ORDER BY f.created_at ASC`
+            : '';
+
+    const whereClause = `
+      WHERE f.user_idx = ${input.userIdx}
+      ${input.storageType !== undefined ? `AND f.storage_idx = ${input.storageType}` : ''}
+    `;
+
+    return await this.prisma.$queryRawUnsafe(`
+      SELECT 
+        f.idx AS "idx",
+        json_build_object(
+          'idx', s.idx,
+          'name', s.name
+        ) AS "storage",
+        f.created_at AS "createdAt",
+        f.amount AS "amount",
+        f.expired_at AS "expiredAt",
+        json_build_object(
+          'idx', u.idx,
+          'name', u.name
+        ) AS "unit",
+        json_build_object(
+          'idx', fd.idx,
+          'name', fd.name,
+          'expiration', fd.expiration,
+          'foodUnit', (
+            SELECT
+              json_agg(
+                json_build_object(
+                  'unit', json_build_object(
+                    'idx', fu.idx,
+                    'name', fu.name
+                  )
+                )
+              )
+            FROM
+              food_unit_tb fut
+            JOIN
+              unit_tb fu
+            ON
+              fut.unit_idx = fu.idx
+            WHERE
+              fut.food_idx = fd.idx
+          ),
+          'foodCategory', json_build_object(
+            'idx', fc.idx,
+            'name', fc.name
+          )
+        ) AS "food",
+        json_build_object(
+          'idx', usr.idx
+        ) AS "user"
+      FROM
+        fridge_tb f
+      JOIN
+        storage_tb s
+      ON
+        f.storage_idx = s.idx
+      JOIN
+        user_tb usr
+      ON
+        f.user_idx = usr.idx
+      JOIN
+        food_tb fd
+      ON
+        f.food_idx = fd.idx
+      JOIN
+        unit_tb u
+      ON
+        f.unit_idx = u.idx
+      
+      LEFT JOIN
+        food_category_tb fc
+      ON
+        fd.category_idx = fc.idx
+      ${whereClause}
+      ${orderByClause}
+    `);
   }
 
   public async insertFridge(
