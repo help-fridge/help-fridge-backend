@@ -43,7 +43,7 @@ export class RecipeRepository {
         : '';
 
     const query = `
-        SELECT 
+        SELECT
           JSON_BUILD_OBJECT(
             'idx', r.idx,
             'id', r.id,
@@ -93,6 +93,11 @@ export class RecipeRepository {
               f_inner.created_at + (fd.expiration || ' days')::INTERVAL
             ) <= NOW() + INTERVAL '3 days'
           AND
+            COALESCE(
+              f_inner.expired_at,
+              f_inner.created_at + (fd.expiration || ' days')::INTERVAL
+            ) > NOW()
+          AND
             f_inner.user_idx = ${userIdx}
         ) f
         ON
@@ -101,8 +106,17 @@ export class RecipeRepository {
           SELECT DISTINCT ON (food_idx)
             *
           FROM
-            fridge_tb
-          WHERE user_idx = ${userIdx}
+            fridge_tb ft
+          JOIN
+            food_tb fd
+          ON
+            ft.food_idx = fd.idx
+          WHERE ft.user_idx = ${userIdx}
+          AND
+            COALESCE(
+              ft.expired_at,
+              ft.created_at + (fd.expiration || ' days')::INTERVAL
+            ) > NOW()
         ) fa ON rf.food_idx = fa.food_idx
         JOIN
           food_tb food
